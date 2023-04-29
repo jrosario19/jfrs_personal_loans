@@ -1,4 +1,5 @@
-﻿using System;
+﻿using jfrs_personal_loans.Data.CompanyConfigurations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,6 +33,9 @@ namespace jfrs_personal_loans.Data
                 return returnValue;
             }
         }
+
+        private CompanyConfigurationRepository _companyConfigurationRepository;
+        public CompanyConfigurationRepository CompanyConfigurationRepository => _companyConfigurationRepository ?? (_companyConfigurationRepository = new CompanyConfigurationRepository(_context));
 
         private bool _disposedValue = false;
 
