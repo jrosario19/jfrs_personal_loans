@@ -20,7 +20,7 @@ namespace jfrs_personal_loans.Data
             tenantId = tenantService.GetTenant();
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override int SaveChanges()
         {
             foreach (var item in ChangeTracker.Entries().Where(e=>e.State==EntityState.Added && e.Entity is ITenantEntity))
             {
@@ -33,7 +33,7 @@ namespace jfrs_personal_loans.Data
                 entity.TenantId = tenantId;
             }
 
-            return base.SaveChangesAsync(cancellationToken);
+            return base.SaveChanges();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -43,7 +43,7 @@ namespace jfrs_personal_loans.Controllers
 
                 var customClaims = new List<Claim>()
                 {
-                    new Claim(Constants.ClaimTenantId, user.Email),
+                    new Claim(Constants.ClaimTenantId, user.Id),
                 };
                 await _userManager.AddClaimsAsync(user, customClaims);
 

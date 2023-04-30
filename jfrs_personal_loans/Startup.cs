@@ -10,9 +10,11 @@ using jfrs_personal_loans.Services.CompanyConfigurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,11 +61,19 @@ namespace jfrs_personal_loans
                 ClockSkew = TimeSpan.Zero
             });
 
+            services.AddDistributedMemoryCache();
+
+            services.AddSession();
+
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddMvc().AddJsonOptions(ConfigureJson);
 
             services.AddHttpContextAccessor();
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<ICompanyConfigurationService, CompanyConfigurationService>();
         }
@@ -88,6 +98,7 @@ namespace jfrs_personal_loans
             app.UseAuthentication();
 
             app.UseHttpsRedirection();
+            app.UseSession();
             app.UseMvc();
 
             //if (!companyConfigurationService.GetCompanyConfigurations().ToList().Any())

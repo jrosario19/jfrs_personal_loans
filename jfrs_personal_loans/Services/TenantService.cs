@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+//using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,8 +49,7 @@ namespace jfrs_personal_loans.Services
 
         private static AuthenticationTicket DecryptAuthCookie(HttpContext httpContext)
         {
-            var opt = httpContext.RequestServices
-                .GetRequiredService<Microsoft.Extensions.Options.IOptionsMonitor<CookieAuthenticationOptions>>().Get("Identity.Aplication");
+            var opt = httpContext.RequestServices.GetService<IOptionsMonitor<CookieAuthenticationOptions>>().Get("Identity.Application");
 
             var cookie = opt.CookieManager.GetRequestCookie(httpContext, opt.Cookie.Name);
 

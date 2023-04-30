@@ -48,7 +48,7 @@ namespace jfrs_personal_loans.Controllers
             companyConfiguration.IsActive = true;
             companyConfiguration.CreatedByUser = User.Identity.Name;
             companyConfiguration.CreatedOnDate = DateTime.Now;
-            companyConfiguration.TenantId = User.Identity.Name;
+            //companyConfiguration.TenantId = User.Identity.Name;
             if (ModelState.IsValid)
             {
                 _companyConfigurationService.InsertCompanyConfiguration(companyConfiguration);
@@ -64,7 +64,7 @@ namespace jfrs_personal_loans.Controllers
             companyConfiguration.IsActive = true;
             companyConfiguration.CreatedByUser = User.Identity.Name;
             companyConfiguration.CreatedOnDate = DateTime.Now;
-            companyConfiguration.TenantId = User.Identity.Name;
+            //companyConfiguration.TenantId = User.Identity.Name;
             if (companyConfiguration.Id!=id)
             {
                 return BadRequest();
