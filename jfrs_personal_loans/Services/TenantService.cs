@@ -42,6 +42,7 @@ namespace jfrs_personal_loans.Services
             }
 
             return claimTenant.Value;
+            
         }
 
         private static AuthenticationTicket DecryptAuthCookie(HttpContext httpContext)

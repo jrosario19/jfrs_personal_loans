@@ -1,4 +1,5 @@
 ﻿using jfrs_personal_loans.Data;
+using jfrs_personal_loans.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace jfrs_personal_loans.Services
             var booleans = new List<bool>()
             {
                 t.IsAssignableFrom(typeof(IdentityRole)),
+                t.IsAssignableFrom(typeof(ApplicationUser)),
                 t.IsAssignableFrom(typeof(IdentityRoleClaim<string>)),
                 t.IsAssignableFrom(typeof(IdentityUser)),
                 t.IsAssignableFrom(typeof(IdentityUserLogin<string>)),

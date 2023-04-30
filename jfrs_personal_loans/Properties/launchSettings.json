@@ -12,8 +12,9 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "api/companyconfigurations",
       "environmentVariables": {
+        "Super_secret_key": "JDJDLDLSKDJROEOIWEOWNDLSJDSOOKWEJJKDSJKFJROWIERDSFKASJDFKJASDKLFJLAKSDJF;DFKGJFJJDASLL",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
@@ -29,7 +30,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/values",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/companyconfigurations",
       "publishAllPorts": true,
       "useSSL": true
     }

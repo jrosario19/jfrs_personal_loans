@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace jfrs_personal_loans.Services.CompanyConfigurations
 {
-    public class CompanyConfigurationService
+    public class CompanyConfigurationService: ICompanyConfigurationService
     {
         private readonly IUnitOfWork _unitOfWork;
 

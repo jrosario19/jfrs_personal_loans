@@ -45,8 +45,8 @@ namespace jfrs_personal_loans.Data
                 var type = entity.ClrType;
                 if (typeof(ITenantEntity).IsAssignableFrom(type))
                 {
-                    var method = typeof(JFRSPersonalLoansDBContext).GetMethod(nameof(SetTenantGlobalFilter), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)?.MakeGenericMethod(type);
-                    var filter = method?.Invoke(null, new object[] { this });
+                    var method = typeof(JFRSPersonalLoansDBContext).GetMethod(nameof(SetTenantGlobalFilter), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).MakeGenericMethod(type);
+                    var filter = method.Invoke(null, new object[] { this });
                     entity.QueryFilter=(LambdaExpression)filter;
                     entity.AddIndex(entity.FindProperty(nameof(ITenantEntity.TenantId)));
                 }
