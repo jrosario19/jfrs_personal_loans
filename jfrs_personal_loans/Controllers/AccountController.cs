@@ -22,13 +22,15 @@ namespace jfrs_personal_loans.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IConfiguration configuration)
+            IConfiguration configuration, IEmailService emailService)
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._configuration = configuration;
+            this._emailService = emailService;
         }
 
         [Route("Create")]
@@ -52,6 +54,13 @@ namespace jfrs_personal_loans.Controllers
 
                 if (result.Succeeded)
                 {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        await SendEmailConfirmationEmail(user, token);
+                    }
+
                     return BuildToken(model);
                 }
                 else
@@ -102,7 +111,7 @@ namespace jfrs_personal_loans.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Super_secret_key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.UtcNow.AddHours(1);
+            var expiration = DateTime.UtcNow.AddHours(5);
 
             JwtSecurityToken token = new JwtSecurityToken(
                issuer: "jfrspersonalloans.com",
@@ -119,5 +128,78 @@ namespace jfrs_personal_loans.Controllers
 
         }
 
+        [Route("Changepassword")]
+        [HttpPost]
+        public async Task<IActionResult> ChangePwd([FromBody] ChangePassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await _userManager.GetUserAsync(User);
+                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    return Ok("Password changed successfully");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid change password attempt.");
+                    return BadRequest(ModelState);
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        private async Task SendEmailConfirmationEmail(ApplicationUser user, string token)
+        {
+            var appDomain = _configuration.GetSection("Application:AppDomain").Value;
+            var confirmationLink = _configuration.GetSection("Application:EmailConfirmation").Value;
+
+            UserEmailOptions userEmailOptions = new UserEmailOptions
+            {
+                ToEmails = new List<string>() { user.Email },
+                Placeholders = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("{{UserName}}", user.Email),
+                    new KeyValuePair<string, string>("{{Link}}", string.Format(appDomain + confirmationLink, user.Id, token)),
+                }
+            };
+
+            await _emailService.SendEmailForEmailConfirmation(userEmailOptions);
+        }
+
+        [Route("confirmemail")]
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string uid, string token)
+        {
+            var user = await _userManager.FindByIdAsync(uid);
+            UserEmailOptions userEmailOptions = new UserEmailOptions
+            {
+                ToEmails = new List<string>() { user.Email },
+                Placeholders = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("{{UserName}}", user.Email),
+                }
+            };
+
+            if (!string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token))
+            {
+                token = token.Replace(' ', '+');
+                var result = await _userManager.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    await _emailService.SendEmailForEmailConfirmationSuccess(userEmailOptions);
+                }
+                else
+                {
+                    await _emailService.SendEmailForEmailConfirmationFail(userEmailOptions);
+                }
+            }
+
+            return Ok("Solicitud completada con éxito, por favor consulte su dirección de correo electrónico para más detalles.");
+        }
     }
 }

@@ -44,7 +44,7 @@ namespace jfrs_personal_loans
             {
                 options.Password.RequiredLength = 5;
                 options.User.RequireUniqueEmail = true;
-                //options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
 
             }).AddEntityFrameworkStores<JFRSPersonalLoansDBContext>().AddDefaultTokenProviders();
 
@@ -68,6 +68,8 @@ namespace jfrs_personal_loans
             services.AddHttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.Configure<SMTPConfig>(Configuration.GetSection("SMTPConfig"));
+
             services.AddMvc().AddJsonOptions(ConfigureJson);
 
             services.AddHttpContextAccessor();
@@ -76,6 +78,7 @@ namespace jfrs_personal_loans
             
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<ICompanyConfigurationService, CompanyConfigurationService>();
+            services.AddTransient<IEmailService, EmailService>();
         }
 
         private void ConfigureJson(MvcJsonOptions obj)
