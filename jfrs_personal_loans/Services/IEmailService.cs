@@ -11,5 +11,6 @@ namespace jfrs_personal_loans.Services
         Task SendEmailForEmailConfirmation(UserEmailOptions userEmailOptions);
         Task SendEmailForEmailConfirmationSuccess(UserEmailOptions userEmailOptions);
         Task SendEmailForEmailConfirmationFail(UserEmailOptions userEmailOptions);
+        Task SendEmailForResetPassword(UserEmailOptions userEmailOptions);
     }
 }

@@ -26,6 +26,14 @@ namespace jfrs_personal_loans.Services
             await SendEmailAsync(userEmailOptions);
         }
 
+        public async Task SendEmailForResetPassword(UserEmailOptions userEmailOptions)
+        {
+            userEmailOptions.Subject = UpdatePlaceHolders("{{UserName}}, Reestablecimiento de Clave Token", userEmailOptions.Placeholders);
+            userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("ResetPasswordEmail"), userEmailOptions.Placeholders);
+
+            await SendEmailAsync(userEmailOptions);
+        }
+
         public async Task SendEmailForEmailConfirmationSuccess(UserEmailOptions userEmailOptions)
         {
             userEmailOptions.Subject = UpdatePlaceHolders("{{UserName}}, Verificación de Email Exitosa", userEmailOptions.Placeholders);

@@ -10,7 +10,7 @@ namespace jfrs_personal_loans.Data
     {
         public int Id { get; set; }
         public string CreatedByUser { get; set; }
-        [Column(TypeName = "date")]
+        [Column(TypeName = "datetime")]
         public DateTime CreatedOnDate { get; set; }
         public bool IsActive { get; set; }
     }

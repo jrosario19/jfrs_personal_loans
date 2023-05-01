@@ -39,7 +39,14 @@ namespace jfrs_personal_loans.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, UserPhotoPath = model.UserPhotoPath };
+                var user = new ApplicationUser 
+                { 
+                    UserName = model.Email, 
+                    Email = model.Email, 
+                    UserPhotoPath = model.UserPhotoPath,
+                    Name = model.Name,
+                    LastName = model.LastName,
+                };
                 
                 var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -134,18 +141,26 @@ namespace jfrs_personal_loans.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var user = await _userManager.GetUserAsync(User);
-                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
-                if (result.Succeeded)
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user !=null)
                 {
-                    return Ok("Password changed successfully");
+                    var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return Ok("Password changed successfully");
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid change password attempt.");
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid change password attempt.");
-                    return BadRequest(ModelState);
+                    return BadRequest("Invalid change password attempt.");
                 }
+
+                
             }
             else
             {
@@ -164,6 +179,7 @@ namespace jfrs_personal_loans.Controllers
                 Placeholders = new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>("{{UserName}}", user.Email),
+                    new KeyValuePair<string, string>("{{Name}}", user.Name),
                     new KeyValuePair<string, string>("{{Link}}", string.Format(appDomain + confirmationLink, user.Id, token)),
                 }
             };
@@ -182,6 +198,7 @@ namespace jfrs_personal_loans.Controllers
                 Placeholders = new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>("{{UserName}}", user.Email),
+                    new KeyValuePair<string, string>("{{Name}}", user.Name),
                 }
             };
 
@@ -201,5 +218,114 @@ namespace jfrs_personal_loans.Controllers
 
             return Ok("Solicitud completada con éxito, por favor consulte su dirección de correo electrónico para más detalles.");
         }
+
+        [Route("resetpasswordemail")]
+        [HttpPost]
+        public async Task<IActionResult> ResetPasswordEmail([FromBody] UserInforResetPasswordEmail model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    Random r = new Random();
+                    int randNum = r.Next(100000);
+                    string token = randNum.ToString("D6");
+                    string tokenExpirationInMinutes = "2";
+                    var expiration = DateTime.Now.AddMinutes(int.Parse(tokenExpirationInMinutes));
+
+                    user.ResetPasswordCode = token;
+                    user.ResetPasswordCodeTimeStamp = expiration;
+
+                    var result = await _userManager.UpdateAsync(user);
+
+                    UserEmailOptions userEmailOptions = new UserEmailOptions
+                    {
+                        ToEmails = new List<string>() { user.Email },
+                        Placeholders = new List<KeyValuePair<string, string>>()
+                    {
+                        new KeyValuePair<string, string>("{{UserName}}", user.Email),
+                        new KeyValuePair<string, string>("{{Name}}", user.Name),
+                        new KeyValuePair<string, string>("{{VerificationCode}}", token),
+                        new KeyValuePair<string, string>("{{ExpiratinTime}}", tokenExpirationInMinutes),
+                    }
+                    };
+
+                    if (result.Succeeded)
+                    {
+
+                        await _emailService.SendEmailForResetPassword(userEmailOptions);
+                        return Ok("Email Sent successfully");
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid input attempt");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Invalid input attempt");
+                }
+            }
+            return BadRequest("Invalid input attempt");
+        }
+        [Route("validateresetpasswordtoken")]
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword([FromBody] UserInfoResetPassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    if (user.Email == model.Email && user.ResetPasswordCode == model.Token && user.ResetPasswordCodeTimeStamp > DateTime.Now)
+                    {
+                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                        return Ok(token);
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid input attempt");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Invalid input attempt");
+                }
+            }
+            return BadRequest("Invalid input attempt");
+        }
+
+        [Route("changepasswordreset")]
+        [HttpPost]
+        public async Task<IActionResult> ResetPasswordChange([FromBody] ResetPasswordChange model) 
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+
+                    if (result.Succeeded)
+                    {
+                        return Ok("Password changed successfully");
+                    }
+                    else
+                    {
+                       return BadRequest("Invalid input attempt");
+                    }
+                }
+                else
+                {
+                   return BadRequest("Invalid input attempt");
+                }
+            }
+            return BadRequest(ModelState);
+        }
     }
+
 }

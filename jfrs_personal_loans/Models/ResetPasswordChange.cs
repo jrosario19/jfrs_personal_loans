@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace jfrs_personal_loans.Models
 {
-    public class ChangePassword
+    public class ResetPasswordChange
     {
         [Required]
         public string Email { get; set; }
         [Required]
-        public string CurrentPassword { get; set; }
+        public string Token { get; set; }
         [Required]
         public string NewPassword { get; set; }
         [Required]
-        [Compare("NewPassword",ErrorMessage ="Confirm new password does not match")]
+        [Compare("NewPassword", ErrorMessage = "Confirm new password does not match")]
         public string ConfirmNewPassword { get; set; }
     }
 }

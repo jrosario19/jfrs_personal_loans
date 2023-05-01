@@ -25,17 +25,21 @@
         p {
             margin-bottom:25px;
         }
+
+        strong {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body style="display:flex;align-items:center;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;color:rgba(0, 0, 0, 0.91)">
     <div class="container">
         <div class="child">
             <h1 style="text-align:center;margin-bottom:100px"><strong>JFRS Prestamos Personales</strong></h1>
-            <p>Hola {{UserName}}</p>
+            <p>Hola <strong> {{Name}}</strong></p>
             <p>¡Gracias por registrarte en JFRS Prestamos Personales! Estamos encantados de tenerte a bordo y estaremos encantados de ayudarte a configurarlo todo.</p>
-            <p>Confirme su correo electrónico ({{UserName}}) haciendo clic en el botón a continuación.</p>
+            <p>Confirme su correo electrónico (<strong> {{UserName}} </strong>) haciendo clic en el botón a continuación.</p>
             <a href="{{Link}}"  style="margin-bottom:25px;background-color:rgba(0, 38, 255, 0.79);border:1px solid black;padding:7px;border-radius:10%;color:white;text-decoration-line:none">Confirmar Email</a>
-            <p>Este enlace caducará en 5 horas.</p>
+            <p>Este enlace caducará en 24 horas.</p>
             <p>Háganos saber si tiene alguna pregunta, solicitud de funciones o comentarios generales simplemente respondiendo a este correo electrónico.</p>
             <p>Atentamente,</p>
             <p>Equipo de JFRS Prestamos Personales</p>
