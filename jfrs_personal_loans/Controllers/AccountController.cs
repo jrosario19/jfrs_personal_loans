@@ -37,48 +37,77 @@ namespace jfrs_personal_loans.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserInfo model)
         {
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser 
-                { 
-                    UserName = model.Email, 
-                    Email = model.Email, 
-                    UserPhotoPath = model.UserPhotoPath,
-                    Name = model.Name,
-                    LastName = model.LastName,
-                };
-                
-                var result = await _userManager.CreateAsync(user, model.Password);
+            var userExist = await _userManager.FindByEmailAsync(model.Email);
 
-                var customClaims = new List<Claim>()
+            if (userExist==null)
+            {
+                if (ModelState.IsValid && model.Password.Length>7)
+                {
+
+                    var user = new ApplicationUser
+                    {
+                        UserName = model.Email,
+                        Email = model.Email,
+                        UserPhotoPath = model.UserPhotoPath,
+                        Name = model.Name,
+                        LastName = model.LastName,
+                    };
+
+                    var result = await _userManager.CreateAsync(user, model.Password);
+
+
+                    var customClaims = new List<Claim>()
                 {
                     new Claim(Constants.ClaimTenantId, user.Id),
                 };
-                await _userManager.AddClaimsAsync(user, customClaims);
+                    await _userManager.AddClaimsAsync(user, customClaims);
 
 
 
 
-                if (result.Succeeded)
-                {
-                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-                    if (!string.IsNullOrEmpty(token))
+                    if (result.Succeeded)
                     {
-                        await SendEmailConfirmationEmail(user, token);
-                    }
 
-                    return BuildToken(model);
+                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            //return Ok(token);
+                            try
+                            {
+                                await SendEmailConfirmationEmail(user, token);
+                            }
+                            catch (Exception e)
+                            {
+
+                                return BadRequest(e.Message);
+                            }
+
+
+                        }
+
+                        return await BuildToken(model);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Could not register the user.");
+                        return BadRequest(ModelState);
+                    }
                 }
                 else
                 {
+                    ModelState.AddModelError(string.Empty, "Invalid model state.");
                     return BadRequest(ModelState);
                 }
             }
             else
             {
+                ModelState.AddModelError(string.Empty, "The user already exist.");
                 return BadRequest(ModelState);
             }
+
+            
 
         }
 
@@ -89,10 +118,18 @@ namespace jfrs_personal_loans.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.FindByEmailAsync(userInfo.Email);
+
+                if (user!=null && !user.EmailConfirmed && (await _userManager.CheckPasswordAsync(user,userInfo.Password)))
+                {
+                    ModelState.AddModelError(string.Empty, "Email not confirmed yet.");
+                    return BadRequest(ModelState);
+                }
+
                 var result = await _signInManager.PasswordSignInAsync(userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return BuildToken(userInfo);
+                    return await BuildToken(userInfo);
                 }
                 else
                 {
@@ -106,7 +143,7 @@ namespace jfrs_personal_loans.Controllers
             }
         }
 
-        private IActionResult BuildToken(UserInfo userInfo)
+        private async Task<IActionResult> BuildToken(UserInfo userInfo)
         {
             var claims = new[]
             {
@@ -120,6 +157,8 @@ namespace jfrs_personal_loans.Controllers
 
             var expiration = DateTime.UtcNow.AddHours(5);
 
+            var user =  await _userManager.FindByEmailAsync(userInfo.Email);
+
             JwtSecurityToken token = new JwtSecurityToken(
                issuer: "jfrspersonalloans.com",
                audience: "jfrspersonalloans.com",
@@ -130,7 +169,8 @@ namespace jfrs_personal_loans.Controllers
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = expiration
+                expiration = expiration,
+                user = user
             });
 
         }
@@ -141,6 +181,7 @@ namespace jfrs_personal_loans.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 var user = await _userManager.FindByEmailAsync(model.Email);
 
                 if (user !=null)
@@ -152,12 +193,14 @@ namespace jfrs_personal_loans.Controllers
                     }
                     else
                     {
-                        return BadRequest("Invalid change password attempt.");
+                        ModelState.AddModelError(string.Empty, "Invalid change password attempt.");
+                        return BadRequest(ModelState);
                     }
                 }
                 else
                 {
-                    return BadRequest("Invalid change password attempt.");
+                    ModelState.AddModelError(string.Empty, "Invalid change password attempt.");
+                    return BadRequest(ModelState);
                 }
 
                 
@@ -183,7 +226,7 @@ namespace jfrs_personal_loans.Controllers
                     new KeyValuePair<string, string>("{{Link}}", string.Format(appDomain + confirmationLink, user.Id, token)),
                 }
             };
-
+            
             await _emailService.SendEmailForEmailConfirmation(userEmailOptions);
         }
 
@@ -208,6 +251,7 @@ namespace jfrs_personal_loans.Controllers
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
                 {
+
                     await _emailService.SendEmailForEmailConfirmationSuccess(userEmailOptions);
                 }
                 else
@@ -260,15 +304,18 @@ namespace jfrs_personal_loans.Controllers
                     }
                     else
                     {
-                        return BadRequest("Invalid input attempt");
+                        ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                        return BadRequest(ModelState);
                     }
                 }
                 else
                 {
-                    return BadRequest("Invalid input attempt");
+                    ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                    return BadRequest(ModelState);
                 }
             }
-            return BadRequest("Invalid input attempt");
+            ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+            return BadRequest(ModelState);
         }
         [Route("validateresetpasswordtoken")]
         [HttpPost]
@@ -287,15 +334,18 @@ namespace jfrs_personal_loans.Controllers
                     }
                     else
                     {
-                        return BadRequest("Invalid input attempt");
+                        ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                        return BadRequest(ModelState);
                     }
                 }
                 else
                 {
-                    return BadRequest("Invalid input attempt");
+                    ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                    return BadRequest(ModelState);
                 }
             }
-            return BadRequest("Invalid input attempt");
+            ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+            return BadRequest(ModelState);
         }
 
         [Route("changepasswordreset")]
@@ -316,14 +366,17 @@ namespace jfrs_personal_loans.Controllers
                     }
                     else
                     {
-                       return BadRequest("Invalid input attempt");
+                        ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                        return BadRequest(ModelState);
                     }
                 }
                 else
                 {
-                   return BadRequest("Invalid input attempt");
+                    ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                    return BadRequest(ModelState);
                 }
             }
+            ModelState.AddModelError(string.Empty, "Invalid input attempt.");
             return BadRequest(ModelState);
         }
     }

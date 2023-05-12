@@ -42,7 +42,11 @@ namespace jfrs_personal_loans
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                options.Password.RequiredLength = 5;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedEmail = true;
 
@@ -50,8 +54,8 @@ namespace jfrs_personal_loans
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => 
             options.TokenValidationParameters = new TokenValidationParameters { 
-                ValidateIssuer = true,
-                ValidateAudience = true,
+                //ValidateIssuer = true,
+                //ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = "jfrspersonalloans.com",
@@ -101,6 +105,7 @@ namespace jfrs_personal_loans
             app.UseAuthentication();
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseSession();
             app.UseMvc();
 

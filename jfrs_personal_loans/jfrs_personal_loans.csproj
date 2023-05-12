@@ -16,7 +16,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <Content Remove="wwwroot\EmailTemplates\FailureEmailConfirmation.html" />
+    <Content Remove="wwwroot\EmailTemplates\ResetPasswordEmail.html" />
+    <Content Remove="wwwroot\EmailTemplates\SuccessfullEmailConfirmation.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\EmailTemplates\ConfirmEmail.html" />
+    <None Include="wwwroot\EmailTemplates\FailureEmailConfirmation.html" />
+    <None Include="wwwroot\EmailTemplates\ResetPasswordEmail.html" />
+    <None Include="wwwroot\EmailTemplates\SuccessfullEmailConfirmation.html" />
   </ItemGroup>
 
   <ItemGroup>

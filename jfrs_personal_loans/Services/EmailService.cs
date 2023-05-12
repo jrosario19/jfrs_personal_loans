@@ -1,8 +1,10 @@
 ﻿using jfrs_personal_loans.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -17,13 +19,14 @@ namespace jfrs_personal_loans.Services
         private const string templatePath = @"EmailTemplates/{0}.html";
         private readonly SMTPConfig _smtpConfig;
         private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         public async Task SendEmailForEmailConfirmation(UserEmailOptions userEmailOptions)
         {
             userEmailOptions.Subject = UpdatePlaceHolders("{{UserName}}, por favor verifique su Email", userEmailOptions.Placeholders);
             userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("ConfirmEmail"), userEmailOptions.Placeholders);
-
-            await SendEmailAsync(userEmailOptions);
+            //userEmailOptions.Body = "Juan Rosario";
+             await SendEmailAsync(userEmailOptions);
         }
 
         public async Task SendEmailForResetPassword(UserEmailOptions userEmailOptions)
@@ -50,10 +53,11 @@ namespace jfrs_personal_loans.Services
             await SendEmailAsync(userEmailOptions);
         }
 
-        public EmailService(IOptions<SMTPConfig> smtpConfig, IConfiguration configuration)
+        public EmailService(IOptions<SMTPConfig> smtpConfig, IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             this._smtpConfig = smtpConfig.Value;
             this._configuration = configuration;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         private async Task SendEmailAsync(UserEmailOptions userEmailOptions)
@@ -88,7 +92,7 @@ namespace jfrs_personal_loans.Services
 
         private string GetEmailBody(string templateName)
         {
-            var body = File.ReadAllText(string.Format(templatePath, templateName));
+            var body = File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath,string.Format(templatePath, templateName)));
             return body;
         }
 
