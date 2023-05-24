@@ -1,4 +1,5 @@
 ﻿using jfrs_personal_loans.Data.CompanyConfigurations;
+using jfrs_personal_loans.Data.Repositories.LanConfigurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,9 @@ namespace jfrs_personal_loans.Data
 
         private CompanyConfigurationRepository _companyConfigurationRepository;
         public CompanyConfigurationRepository CompanyConfigurationRepository => _companyConfigurationRepository ?? (_companyConfigurationRepository = new CompanyConfigurationRepository(_context));
+
+        private LoanConfigurationRepository _loanConfigurationRepository;
+        public LoanConfigurationRepository LoanConfigurationRepository => _loanConfigurationRepository ?? (_loanConfigurationRepository = new LoanConfigurationRepository(_context));
 
         private bool _disposedValue = false;
 

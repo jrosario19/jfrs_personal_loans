@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/companyconfigurations",
+      "launchUrl": "api/companyconfigurations/getall",
       "environmentVariables": {
         "Email_password": "00-12851",
         "Email_user_name": "jfrsprestamospersonales@hotmail.com",

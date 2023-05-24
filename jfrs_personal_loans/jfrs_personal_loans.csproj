@@ -16,16 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\EmailTemplates\FailureEmailConfirmation.html" />
-    <Content Remove="wwwroot\EmailTemplates\ResetPasswordEmail.html" />
-    <Content Remove="wwwroot\EmailTemplates\SuccessfullEmailConfirmation.html" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\EmailTemplates\ConfirmEmail.html" />
-    <None Include="wwwroot\EmailTemplates\FailureEmailConfirmation.html" />
-    <None Include="wwwroot\EmailTemplates\ResetPasswordEmail.html" />
-    <None Include="wwwroot\EmailTemplates\SuccessfullEmailConfirmation.html" />
+    <None Include="wwwroot\*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +24,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
 </Project>

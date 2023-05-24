@@ -17,9 +17,9 @@ namespace jfrs_personal_loans.Services.CompanyConfigurations
         }
         public CompanyConfiguration InsertCompanyConfiguration(CompanyConfiguration CompanyConfiguration)
         {
-            CompanyConfiguration clientDeliveryPoint = _unitOfWork.CompanyConfigurationRepository.Insert(CompanyConfiguration);
+            CompanyConfiguration companyConfiguration = _unitOfWork.CompanyConfigurationRepository.Insert(CompanyConfiguration);
             _unitOfWork.SaveChanges();
-            return clientDeliveryPoint;
+            return companyConfiguration;
         }
         public CompanyConfiguration GetCompanyConfigurationById(int? Id)
         {
@@ -32,16 +32,16 @@ namespace jfrs_personal_loans.Services.CompanyConfigurations
         }
         public CompanyConfiguration UpdateCompanyConfiguration(CompanyConfiguration CompanyConfiguration)
         {
-            CompanyConfiguration clientDeliveryPoint = _unitOfWork.CompanyConfigurationRepository.Update(CompanyConfiguration);
+            CompanyConfiguration companyConfiguration = _unitOfWork.CompanyConfigurationRepository.Update(CompanyConfiguration);
             _unitOfWork.SaveChanges();
-            return clientDeliveryPoint;
+            return companyConfiguration;
         }
         public CompanyConfiguration DeleteCompanyConfiguration(CompanyConfiguration CompanyConfiguration)
         {
             CompanyConfiguration.IsActive = false;
-            CompanyConfiguration clientDeliveryPoint = _unitOfWork.CompanyConfigurationRepository.Update(CompanyConfiguration);
+            CompanyConfiguration companyConfiguration = _unitOfWork.CompanyConfigurationRepository.Update(CompanyConfiguration);
             _unitOfWork.SaveChanges();
-            return clientDeliveryPoint;
+            return companyConfiguration;
             //return _CompanyConfigurationRepository.Delete(CompanyConfiguration);
         }
     }

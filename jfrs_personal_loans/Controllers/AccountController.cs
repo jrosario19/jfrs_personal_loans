@@ -91,19 +91,19 @@ namespace jfrs_personal_loans.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Could not register the user.");
+                        ModelState.AddModelError("message", "Could not register the user.");
                         return BadRequest(ModelState);
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid model state.");
+                    ModelState.AddModelError("message", "Invalid model state.");
                     return BadRequest(ModelState);
                 }
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "The user already exist.");
+                ModelState.AddModelError("message", "The user already exist.");
                 return BadRequest(ModelState);
             }
 
@@ -122,7 +122,7 @@ namespace jfrs_personal_loans.Controllers
 
                 if (user!=null && !user.EmailConfirmed && (await _userManager.CheckPasswordAsync(user,userInfo.Password)))
                 {
-                    ModelState.AddModelError(string.Empty, "Email not confirmed yet.");
+                    ModelState.AddModelError("message", "Email not confirmed yet.");
                     return BadRequest(ModelState);
                 }
 
@@ -133,7 +133,7 @@ namespace jfrs_personal_loans.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError("message", "Invalid login attempt.");
                     return BadRequest(ModelState);
                 }
             }
@@ -189,17 +189,17 @@ namespace jfrs_personal_loans.Controllers
                     var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
-                        return Ok("Password changed successfully");
+                        return Ok(new { message = "Password changed successfully" });
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Invalid change password attempt.");
+                        ModelState.AddModelError("message", "Invalid change password attempt.");
                         return BadRequest(ModelState);
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid change password attempt.");
+                    ModelState.AddModelError("message", "Invalid change password attempt.");
                     return BadRequest(ModelState);
                 }
 
@@ -276,7 +276,7 @@ namespace jfrs_personal_loans.Controllers
                     Random r = new Random();
                     int randNum = r.Next(100000);
                     string token = randNum.ToString("D6");
-                    string tokenExpirationInMinutes = "2";
+                    string tokenExpirationInMinutes = "5";
                     var expiration = DateTime.Now.AddMinutes(int.Parse(tokenExpirationInMinutes));
 
                     user.ResetPasswordCode = token;
@@ -300,21 +300,21 @@ namespace jfrs_personal_loans.Controllers
                     {
 
                         await _emailService.SendEmailForResetPassword(userEmailOptions);
-                        return Ok("Email Sent successfully");
+                        return Ok(new { message= "Email Sent successfully", user=user });
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                        ModelState.AddModelError("message", "Invalid input attempt.");
                         return BadRequest(ModelState);
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                    ModelState.AddModelError("message", "Invalid input attempt.");
                     return BadRequest(ModelState);
                 }
             }
-            ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+            ModelState.AddModelError("message", "Invalid input attempt.");
             return BadRequest(ModelState);
         }
         [Route("validateresetpasswordtoken")]
@@ -330,21 +330,21 @@ namespace jfrs_personal_loans.Controllers
                     if (user.Email == model.Email && user.ResetPasswordCode == model.Token && user.ResetPasswordCodeTimeStamp > DateTime.Now)
                     {
                         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                        return Ok(token);
+                        return Ok(new { token = token, user=user } );
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                        ModelState.AddModelError("message", "Invalid input attempt.");
                         return BadRequest(ModelState);
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                    ModelState.AddModelError("message", "Invalid input attempt.");
                     return BadRequest(ModelState);
                 }
             }
-            ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+            ModelState.AddModelError("message", "Invalid input attempt.");
             return BadRequest(ModelState);
         }
 
@@ -362,21 +362,21 @@ namespace jfrs_personal_loans.Controllers
 
                     if (result.Succeeded)
                     {
-                        return Ok("Password changed successfully");
+                        return Ok(new { message = "Password changed successfully" });
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                        ModelState.AddModelError("message", "Invalid input attempt.");
                         return BadRequest(ModelState);
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+                    ModelState.AddModelError("message", "Invalid input attempt.");
                     return BadRequest(ModelState);
                 }
             }
-            ModelState.AddModelError(string.Empty, "Invalid input attempt.");
+            ModelState.AddModelError("message", "Invalid input attempt.");
             return BadRequest(ModelState);
         }
     }

@@ -22,7 +22,7 @@ namespace jfrs_personal_loans.Data
 
         public override int SaveChanges()
         {
-            foreach (var item in ChangeTracker.Entries().Where(e=>e.State==EntityState.Added && e.Entity is ITenantEntity))
+            foreach (var item in ChangeTracker.Entries().Where(e=>e.State==EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted && e.Entity is ITenantEntity))
             {
                 if (string.IsNullOrEmpty(tenantId))
                 {
@@ -68,5 +68,6 @@ namespace jfrs_personal_loans.Data
         }
 
         public DbSet<CompanyConfiguration> CompanyConfigurations { get; set; }
+        public DbSet<LoanConfiguration> LoanConfigurations { get; set; }
     }
 }

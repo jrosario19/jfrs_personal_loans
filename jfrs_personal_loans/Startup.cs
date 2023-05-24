@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace jfrs_personal_loans
 {
@@ -51,6 +52,11 @@ namespace jfrs_personal_loans
                 options.SignIn.RequireConfirmedEmail = true;
 
             }).AddEntityFrameworkStores<JFRSPersonalLoansDBContext>().AddDefaultTokenProviders();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "JRS Personal Loans Api", Version = "v1" });
+            });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => 
             options.TokenValidationParameters = new TokenValidationParameters { 
@@ -108,6 +114,12 @@ namespace jfrs_personal_loans
             app.UseStaticFiles();
             app.UseSession();
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "JRS Personal Loans Api");
+            });
 
             //if (!companyConfigurationService.GetCompanyConfigurations().ToList().Any())
             //{

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using jfrs_personal_loans.Data;
 
 namespace jfrs_personal_loans.Migrations
 {
     [DbContext(typeof(JFRSPersonalLoansDBContext))]
-    partial class JFRSPersonalLoansDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230522205803_AddFEIdToBaseEntity")]
+    partial class AddFEIdToBaseEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,61 +116,6 @@ namespace jfrs_personal_loans.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("CompanyConfigurations");
-                });
-
-            modelBuilder.Entity("jfrs_personal_loans.Models.LoanConfiguration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedByUser");
-
-                    b.Property<DateTime>("CreatedOnDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("DefaultInterest");
-
-                    b.Property<string>("FEId")
-                        .IsRequired();
-
-                    b.Property<int>("FortnightDays");
-
-                    b.Property<string>("IgnoredWeekDays");
-
-                    b.Property<string>("InterestApplication");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<bool>("IsAllowLoanArrears");
-
-                    b.Property<bool>("IsAllowToSetDayForPayment");
-
-                    b.Property<int>("LoanArrearsAllowDays");
-
-                    b.Property<string>("LoanArrearsApplication");
-
-                    b.Property<int>("LoanArrearsInterest");
-
-                    b.Property<int>("MonthDays");
-
-                    b.Property<int>("PaymentFirstFortnightDay");
-
-                    b.Property<string>("PaymentFrequency");
-
-                    b.Property<int>("PaymentMonthtDay");
-
-                    b.Property<int>("PaymentSecondFortnightDay");
-
-                    b.Property<int>("PaymentWeekDay");
-
-                    b.Property<string>("TenantId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("LoanConfigurations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
