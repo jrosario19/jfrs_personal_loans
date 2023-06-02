@@ -69,5 +69,6 @@ namespace jfrs_personal_loans.Data
 
         public DbSet<CompanyConfiguration> CompanyConfigurations { get; set; }
         public DbSet<LoanConfiguration> LoanConfigurations { get; set; }
+        public DbSet<Client> Clients { get; set; }
     }
 }

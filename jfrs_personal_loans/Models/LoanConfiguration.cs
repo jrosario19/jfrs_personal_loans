@@ -19,7 +19,7 @@ namespace jfrs_personal_loans.Models
         public int MonthDays { get; set; }
         public int FortnightDays { get; set; }
         public bool IsAllowToSetDayForPayment { get; set; }
-        public int PaymentWeekDay { get; set; }
+        public string PaymentWeekDay { get; set; }
         public int PaymentFirstFortnightDay { get; set; }
         public int PaymentSecondFortnightDay { get; set; }
         public int PaymentMonthtDay { get; set; }

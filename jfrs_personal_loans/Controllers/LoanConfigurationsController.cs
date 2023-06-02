@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using jfrs_personal_loans.Models;
+using jfrs_personal_loans.Services;
 using jfrs_personal_loans.Services.LoanConfigurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -17,10 +18,12 @@ namespace jfrs_personal_loans.Controllers
     public class LoanConfigurationsController : ControllerBase
     {
         private readonly ILoanConfigurationService _loanConfigurationService;
+        private readonly ITenantService _tenantService;
 
-        public LoanConfigurationsController(ILoanConfigurationService loanConfigurationService)
+        public LoanConfigurationsController(ILoanConfigurationService loanConfigurationService, ITenantService tenantService)
         {
             this._loanConfigurationService = loanConfigurationService;
+            this._tenantService = tenantService;
         }
 
         [HttpGet]
@@ -48,13 +51,42 @@ namespace jfrs_personal_loans.Controllers
         [Route("create")]
         public IActionResult Create([FromBody] LoanConfiguration loanConfiguration)
         {
+            var tenantId = _tenantService.GetTenant();
+            var loanConfigurationExist = _loanConfigurationService.GetLoanConfigurations().FirstOrDefault(lc => lc.TenantId == tenantId);
+            loanConfigurationExist.PaymentFrequency = loanConfiguration.PaymentFrequency;
+            loanConfigurationExist.InterestApplication = loanConfiguration.InterestApplication;
+            loanConfigurationExist.DefaultInterest = loanConfiguration.DefaultInterest;
+            loanConfigurationExist.IsAllowLoanArrears = loanConfiguration.IsAllowLoanArrears;
+            loanConfigurationExist.LoanArrearsApplication = loanConfiguration.LoanArrearsApplication;
+            loanConfigurationExist.LoanArrearsInterest = loanConfiguration.LoanArrearsInterest;
+            loanConfigurationExist.LoanArrearsAllowDays = loanConfiguration.LoanArrearsAllowDays;
+            loanConfigurationExist.IgnoredWeekDays = loanConfiguration.IgnoredWeekDays;
+            loanConfigurationExist.MonthDays = loanConfiguration.MonthDays;
+            loanConfigurationExist.FortnightDays = loanConfiguration.FortnightDays;
+            loanConfigurationExist.IsAllowToSetDayForPayment = loanConfiguration.IsAllowToSetDayForPayment;
+            loanConfigurationExist.PaymentWeekDay = loanConfiguration.PaymentWeekDay;
+            loanConfigurationExist.PaymentFirstFortnightDay = loanConfiguration.PaymentFirstFortnightDay;
+            loanConfigurationExist.PaymentSecondFortnightDay = loanConfiguration.PaymentSecondFortnightDay;
+            loanConfigurationExist.PaymentMonthtDay = loanConfiguration.PaymentMonthtDay;
+
+            loanConfigurationExist.IsActive = true;
+            loanConfigurationExist.CreatedByUser = User.Identity.Name;
+            loanConfigurationExist.CreatedOnDate = DateTime.Now;
+
             loanConfiguration.IsActive = true;
             loanConfiguration.CreatedByUser = User.Identity.Name;
             loanConfiguration.CreatedOnDate = DateTime.Now;
             //loanConfiguration.TenantId = User.Identity.Name;
             if (ModelState.IsValid)
             {
-                _loanConfigurationService.InsertLoanConfiguration(loanConfiguration);
+                if (loanConfigurationExist != null)
+                {
+                    _loanConfigurationService.UpdateLoanConfiguration(loanConfigurationExist);
+                }
+                else {
+                    _loanConfigurationService.InsertLoanConfiguration(loanConfiguration);
+                }
+                
                 return new CreatedAtRouteResult("CreatedLoanConfiguration", new { id = loanConfiguration.Id }, new { loanConfiguration = loanConfiguration });
             }
 

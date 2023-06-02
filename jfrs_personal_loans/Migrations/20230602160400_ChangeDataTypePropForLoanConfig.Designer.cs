@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using jfrs_personal_loans.Data;
 
 namespace jfrs_personal_loans.Migrations
 {
     [DbContext(typeof(JFRSPersonalLoansDBContext))]
-    partial class JFRSPersonalLoansDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230602160400_ChangeDataTypePropForLoanConfig")]
+    partial class ChangeDataTypePropForLoanConfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,53 +83,6 @@ namespace jfrs_personal_loans.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("jfrs_personal_loans.Models.Client", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address");
-
-                    b.Property<string>("CellPhoneNumber");
-
-                    b.Property<string>("Code");
-
-                    b.Property<string>("CreatedByUser");
-
-                    b.Property<DateTime>("CreatedOnDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Email");
-
-                    b.Property<string>("FEId")
-                        .IsRequired();
-
-                    b.Property<string>("HomePhoneNumber");
-
-                    b.Property<string>("Identification");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<string>("LastName");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("ReferalAddress");
-
-                    b.Property<string>("ReferalName");
-
-                    b.Property<string>("ReferalPhonenumber");
-
-                    b.Property<string>("TenantId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("jfrs_personal_loans.Models.CompanyConfiguration", b =>

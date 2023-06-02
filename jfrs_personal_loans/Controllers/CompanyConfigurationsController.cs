@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using jfrs_personal_loans.Models;
+using jfrs_personal_loans.Services;
 using jfrs_personal_loans.Services.CompanyConfigurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -17,10 +18,12 @@ namespace jfrs_personal_loans.Controllers
     public class CompanyConfigurationsController : ControllerBase
     {
         private readonly ICompanyConfigurationService _companyConfigurationService;
+        private readonly ITenantService _tenantService;
 
-        public CompanyConfigurationsController(ICompanyConfigurationService companyConfigurationService)
+        public CompanyConfigurationsController(ICompanyConfigurationService companyConfigurationService, ITenantService tenantService)
         {
             this._companyConfigurationService = companyConfigurationService;
+            this._tenantService = tenantService;
         }
 
         [HttpGet]
@@ -48,13 +51,32 @@ namespace jfrs_personal_loans.Controllers
         [Route("create")]
         public IActionResult Create ([FromBody] CompanyConfiguration companyConfiguration)
         {
+            var tenantId = _tenantService.GetTenant();
+            var companyConfigurationExist = _companyConfigurationService.GetCompanyConfigurations().FirstOrDefault(lc => lc.TenantId == tenantId);
+
+            companyConfigurationExist.IsActive = true;
+            companyConfigurationExist.CreatedByUser = User.Identity.Name;
+            companyConfigurationExist.CreatedOnDate = DateTime.Now;
+            companyConfigurationExist.Name = companyConfiguration.Name;
+            companyConfigurationExist.Address = companyConfiguration.Address;
+            companyConfigurationExist.PhoneNumber = companyConfiguration.PhoneNumber;
+            companyConfigurationExist.Currency = companyConfiguration.Currency;
+
+
             companyConfiguration.IsActive = true;
             companyConfiguration.CreatedByUser = User.Identity.Name;
             companyConfiguration.CreatedOnDate = DateTime.Now;
             //companyConfiguration.TenantId = User.Identity.Name;
             if (ModelState.IsValid)
             {
-                _companyConfigurationService.InsertCompanyConfiguration(companyConfiguration);
+                if (companyConfigurationExist != null)
+                {
+                    _companyConfigurationService.InsertCompanyConfiguration(companyConfigurationExist);
+                }
+                else
+                {
+                    _companyConfigurationService.InsertCompanyConfiguration(companyConfiguration);
+                }
                 return new CreatedAtRouteResult("CreatedCompanyConfiguration", new { id = companyConfiguration.Id }, new { companyConfiguration = companyConfiguration } );
             }
 

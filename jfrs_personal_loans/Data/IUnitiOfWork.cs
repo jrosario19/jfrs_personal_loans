@@ -1,4 +1,5 @@
 ﻿using jfrs_personal_loans.Data.CompanyConfigurations;
+using jfrs_personal_loans.Data.Repositories.Clients;
 using jfrs_personal_loans.Data.Repositories.LanConfigurations;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace jfrs_personal_loans.Data
         bool SaveChanges();
         CompanyConfigurationRepository CompanyConfigurationRepository { get; }
         LoanConfigurationRepository LoanConfigurationRepository { get; }
+        ClientRepository ClientRepository { get; }
     }
 }
