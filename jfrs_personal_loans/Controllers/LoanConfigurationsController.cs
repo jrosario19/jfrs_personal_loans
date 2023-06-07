@@ -53,25 +53,7 @@ namespace jfrs_personal_loans.Controllers
         {
             var tenantId = _tenantService.GetTenant();
             var loanConfigurationExist = _loanConfigurationService.GetLoanConfigurations().FirstOrDefault(lc => lc.TenantId == tenantId);
-            loanConfigurationExist.PaymentFrequency = loanConfiguration.PaymentFrequency;
-            loanConfigurationExist.InterestApplication = loanConfiguration.InterestApplication;
-            loanConfigurationExist.DefaultInterest = loanConfiguration.DefaultInterest;
-            loanConfigurationExist.IsAllowLoanArrears = loanConfiguration.IsAllowLoanArrears;
-            loanConfigurationExist.LoanArrearsApplication = loanConfiguration.LoanArrearsApplication;
-            loanConfigurationExist.LoanArrearsInterest = loanConfiguration.LoanArrearsInterest;
-            loanConfigurationExist.LoanArrearsAllowDays = loanConfiguration.LoanArrearsAllowDays;
-            loanConfigurationExist.IgnoredWeekDays = loanConfiguration.IgnoredWeekDays;
-            loanConfigurationExist.MonthDays = loanConfiguration.MonthDays;
-            loanConfigurationExist.FortnightDays = loanConfiguration.FortnightDays;
-            loanConfigurationExist.IsAllowToSetDayForPayment = loanConfiguration.IsAllowToSetDayForPayment;
-            loanConfigurationExist.PaymentWeekDay = loanConfiguration.PaymentWeekDay;
-            loanConfigurationExist.PaymentFirstFortnightDay = loanConfiguration.PaymentFirstFortnightDay;
-            loanConfigurationExist.PaymentSecondFortnightDay = loanConfiguration.PaymentSecondFortnightDay;
-            loanConfigurationExist.PaymentMonthtDay = loanConfiguration.PaymentMonthtDay;
-
-            loanConfigurationExist.IsActive = true;
-            loanConfigurationExist.CreatedByUser = User.Identity.Name;
-            loanConfigurationExist.CreatedOnDate = DateTime.Now;
+            
 
             loanConfiguration.IsActive = true;
             loanConfiguration.CreatedByUser = User.Identity.Name;
@@ -81,13 +63,35 @@ namespace jfrs_personal_loans.Controllers
             {
                 if (loanConfigurationExist != null)
                 {
+                    loanConfigurationExist.PaymentFrequency = loanConfiguration.PaymentFrequency;
+                    loanConfigurationExist.InterestApplication = loanConfiguration.InterestApplication;
+                    loanConfigurationExist.DefaultInterest = loanConfiguration.DefaultInterest;
+                    loanConfigurationExist.IsAllowLoanArrears = loanConfiguration.IsAllowLoanArrears;
+                    loanConfigurationExist.LoanArrearsApplication = loanConfiguration.LoanArrearsApplication;
+                    loanConfigurationExist.LoanArrearsInterest = loanConfiguration.LoanArrearsInterest;
+                    loanConfigurationExist.LoanArrearsAllowDays = loanConfiguration.LoanArrearsAllowDays;
+                    loanConfigurationExist.IgnoredWeekDays = loanConfiguration.IgnoredWeekDays;
+                    loanConfigurationExist.MonthDays = loanConfiguration.MonthDays;
+                    loanConfigurationExist.FortnightDays = loanConfiguration.FortnightDays;
+                    loanConfigurationExist.IsAllowToSetDayForPayment = loanConfiguration.IsAllowToSetDayForPayment;
+                    loanConfigurationExist.PaymentWeekDay = loanConfiguration.PaymentWeekDay;
+                    loanConfigurationExist.PaymentFirstFortnightDay = loanConfiguration.PaymentFirstFortnightDay;
+                    loanConfigurationExist.PaymentSecondFortnightDay = loanConfiguration.PaymentSecondFortnightDay;
+                    loanConfigurationExist.PaymentMonthtDay = loanConfiguration.PaymentMonthtDay;
+
+                    loanConfigurationExist.IsActive = true;
+                    loanConfigurationExist.CreatedByUser = User.Identity.Name;
+                    loanConfigurationExist.CreatedOnDate = DateTime.Now;
+
                     _loanConfigurationService.UpdateLoanConfiguration(loanConfigurationExist);
+                    return new CreatedAtRouteResult("CreatedLoanConfiguration", new { id = loanConfiguration.Id }, new { loanConfiguration = loanConfigurationExist });
                 }
                 else {
                     _loanConfigurationService.InsertLoanConfiguration(loanConfiguration);
+                    return new CreatedAtRouteResult("CreatedLoanConfiguration", new { id = loanConfiguration.Id }, new { loanConfiguration = loanConfiguration });
                 }
                 
-                return new CreatedAtRouteResult("CreatedLoanConfiguration", new { id = loanConfiguration.Id }, new { loanConfiguration = loanConfiguration });
+                
             }
 
             ModelState.AddModelError("message", "Invalid input attempt.");

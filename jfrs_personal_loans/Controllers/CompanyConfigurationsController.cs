@@ -54,13 +54,7 @@ namespace jfrs_personal_loans.Controllers
             var tenantId = _tenantService.GetTenant();
             var companyConfigurationExist = _companyConfigurationService.GetCompanyConfigurations().FirstOrDefault(lc => lc.TenantId == tenantId);
 
-            companyConfigurationExist.IsActive = true;
-            companyConfigurationExist.CreatedByUser = User.Identity.Name;
-            companyConfigurationExist.CreatedOnDate = DateTime.Now;
-            companyConfigurationExist.Name = companyConfiguration.Name;
-            companyConfigurationExist.Address = companyConfiguration.Address;
-            companyConfigurationExist.PhoneNumber = companyConfiguration.PhoneNumber;
-            companyConfigurationExist.Currency = companyConfiguration.Currency;
+            
 
 
             companyConfiguration.IsActive = true;
@@ -71,13 +65,22 @@ namespace jfrs_personal_loans.Controllers
             {
                 if (companyConfigurationExist != null)
                 {
+                    companyConfigurationExist.IsActive = true;
+                    companyConfigurationExist.CreatedByUser = User.Identity.Name;
+                    companyConfigurationExist.CreatedOnDate = DateTime.Now;
+                    companyConfigurationExist.Name = companyConfiguration.Name;
+                    companyConfigurationExist.Address = companyConfiguration.Address;
+                    companyConfigurationExist.PhoneNumber = companyConfiguration.PhoneNumber;
+                    companyConfigurationExist.Currency = companyConfiguration.Currency;
                     _companyConfigurationService.InsertCompanyConfiguration(companyConfigurationExist);
+                    return new CreatedAtRouteResult("CreatedCompanyConfiguration", new { id = companyConfiguration.Id }, new { companyConfiguration = companyConfigurationExist });
                 }
                 else
                 {
                     _companyConfigurationService.InsertCompanyConfiguration(companyConfiguration);
+                    return new CreatedAtRouteResult("CreatedCompanyConfiguration", new { id = companyConfiguration.Id }, new { companyConfiguration = companyConfiguration });
                 }
-                return new CreatedAtRouteResult("CreatedCompanyConfiguration", new { id = companyConfiguration.Id }, new { companyConfiguration = companyConfiguration } );
+                
             }
 
             ModelState.AddModelError("message", "Invalid input attempt.");

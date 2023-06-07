@@ -52,39 +52,40 @@ namespace jfrs_personal_loans.Controllers
         public IActionResult Create([FromBody] Client client)
         {
             var tenantId = _tenantService.GetTenant();
-            var clientExist = _clientService.GetClients().FirstOrDefault(lc => lc.TenantId == tenantId);
-            clientExist.Name = client.Name;
-            clientExist.LastName = client.LastName;
-            clientExist.Identification = client.Identification;
-            clientExist.Code = client.Code;
-            clientExist.CellPhoneNumber = client.CellPhoneNumber;
-            clientExist.HomePhoneNumber = client.HomePhoneNumber;
-            clientExist.Address = client.Address;
-            clientExist.ReferalName = client.ReferalName;
-            clientExist.ReferalPhonenumber = client.ReferalPhonenumber;
-            clientExist.ReferalAddress = client.ReferalAddress;
+            var clientExist = _clientService.GetClients().ToList().FirstOrDefault(lc => lc.TenantId == tenantId);
             
-
-            clientExist.IsActive = true;
-            clientExist.CreatedByUser = User.Identity.Name;
-            clientExist.CreatedOnDate = DateTime.Now;
-
-            client.IsActive = true;
             client.CreatedByUser = User.Identity.Name;
             client.CreatedOnDate = DateTime.Now;
-            //client.TenantId = User.Identity.Name;
+            
             if (ModelState.IsValid)
             {
                 if (clientExist != null)
                 {
+                    clientExist.Name = client.Name;
+                    clientExist.LastName = client.LastName;
+                    clientExist.Identification = client.Identification;
+                    clientExist.Code = client.Code;
+                    clientExist.CellPhoneNumber = client.CellPhoneNumber;
+                    clientExist.HomePhoneNumber = client.HomePhoneNumber;
+                    clientExist.Address = client.Address;
+                    clientExist.ReferalName = client.ReferalName;
+                    clientExist.ReferalPhonenumber = client.ReferalPhonenumber;
+                    clientExist.ReferalAddress = client.ReferalAddress;
+
+
+                    clientExist.IsActive = client.IsActive;
+                    clientExist.CreatedByUser = User.Identity.Name;
+                    clientExist.CreatedOnDate = DateTime.Now;
                     _clientService.UpdateClient(clientExist);
+                    return new CreatedAtRouteResult("CreatedClient", new { id = client.Id }, new { client = clientExist });
                 }
                 else
                 {
                     _clientService.InsertClient(client);
+                    return new CreatedAtRouteResult("CreatedClient", new { id = client.Id }, new { client = client });
                 }
 
-                return new CreatedAtRouteResult("CreatedClient", new { id = client.Id }, new { client = client });
+                
             }
 
             ModelState.AddModelError("message", "Invalid input attempt.");
@@ -104,7 +105,7 @@ namespace jfrs_personal_loans.Controllers
             //    ModelState.AddModelError("message", "Invalid input attempt.");
             //    return BadRequest(ModelState);
             //}
-            client.IsActive = true;
+            //client.IsActive = true;
             client.CreatedByUser = User.Identity.Name;
             client.CreatedOnDate = DateTime.Now;
             var clientUpdated = _clientService.UpdateClient(client);
