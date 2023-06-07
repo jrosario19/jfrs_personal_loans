@@ -28,9 +28,10 @@ namespace jfrs_personal_loans.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public IEnumerable<Client> GetAll()
+        public IActionResult GetAll()
         {
-            return _clientService.GetClients().ToList();
+            var clients = _clientService.GetClients().ToList();
+            return Ok(new { clients = clients });
         }
 
         [HttpGet("{id}", Name = "CreatedClient")]
@@ -51,39 +52,17 @@ namespace jfrs_personal_loans.Controllers
         [Route("create")]
         public IActionResult Create([FromBody] Client client)
         {
-            var tenantId = _tenantService.GetTenant();
-            var clientExist = _clientService.GetClients().ToList().FirstOrDefault(lc => lc.TenantId == tenantId);
+           
             
             client.CreatedByUser = User.Identity.Name;
             client.CreatedOnDate = DateTime.Now;
             
             if (ModelState.IsValid)
             {
-                if (clientExist != null)
-                {
-                    clientExist.Name = client.Name;
-                    clientExist.LastName = client.LastName;
-                    clientExist.Identification = client.Identification;
-                    clientExist.Code = client.Code;
-                    clientExist.CellPhoneNumber = client.CellPhoneNumber;
-                    clientExist.HomePhoneNumber = client.HomePhoneNumber;
-                    clientExist.Address = client.Address;
-                    clientExist.ReferalName = client.ReferalName;
-                    clientExist.ReferalPhonenumber = client.ReferalPhonenumber;
-                    clientExist.ReferalAddress = client.ReferalAddress;
-
-
-                    clientExist.IsActive = client.IsActive;
-                    clientExist.CreatedByUser = User.Identity.Name;
-                    clientExist.CreatedOnDate = DateTime.Now;
-                    _clientService.UpdateClient(clientExist);
-                    return new CreatedAtRouteResult("CreatedClient", new { id = client.Id }, new { client = clientExist });
-                }
-                else
-                {
+                
                     _clientService.InsertClient(client);
                     return new CreatedAtRouteResult("CreatedClient", new { id = client.Id }, new { client = client });
-                }
+                
 
                 
             }
@@ -97,15 +76,7 @@ namespace jfrs_personal_loans.Controllers
         public IActionResult Update([FromBody] Client client)
         {
 
-            //var clientToBeUpdated = _clientService.GetClientById(client.Id);
-            //client.TenantId = User.Identity.Name;
-            //if (clientToBeUpdated == null)
-            //{
-
-            //    ModelState.AddModelError("message", "Invalid input attempt.");
-            //    return BadRequest(ModelState);
-            //}
-            //client.IsActive = true;
+            
             client.CreatedByUser = User.Identity.Name;
             client.CreatedOnDate = DateTime.Now;
             var clientUpdated = _clientService.UpdateClient(client);

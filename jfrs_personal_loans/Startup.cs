@@ -8,7 +8,9 @@ using jfrs_personal_loans.Models;
 using jfrs_personal_loans.Services;
 using jfrs_personal_loans.Services.Clients;
 using jfrs_personal_loans.Services.CompanyConfigurations;
+using jfrs_personal_loans.Services.Installments;
 using jfrs_personal_loans.Services.LoanConfigurations;
+using jfrs_personal_loans.Services.Loans;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -92,6 +94,8 @@ namespace jfrs_personal_loans
             services.AddTransient<ICompanyConfigurationService, CompanyConfigurationService>();
             services.AddTransient<ILoanConfigurationService, LoanConfigurationService>();
             services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<ILoanService, LoanService>();
+            services.AddTransient<IInstallmentService, InstallmentService>();
             services.AddTransient<IEmailService, EmailService>();
         }
 

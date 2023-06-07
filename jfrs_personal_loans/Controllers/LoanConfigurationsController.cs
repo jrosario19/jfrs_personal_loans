@@ -28,9 +28,10 @@ namespace jfrs_personal_loans.Controllers
 
         [HttpGet]
         [Route("getall")]
-        public IEnumerable<LoanConfiguration> GetAll()
+        public IActionResult GetAll()
         {
-            return _loanConfigurationService.GetLoanConfigurations().ToList();
+            var loanConfigurations =  _loanConfigurationService.GetLoanConfigurations().ToList();
+            return Ok(new { loanConfigurations = loanConfigurations });
         }
 
         [HttpGet("{id}", Name = "CreatedLoanConfiguration")]
