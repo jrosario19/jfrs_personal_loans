@@ -21,6 +21,9 @@ namespace jfrs_personal_loans.Models
         public int installmentQty { get; set; }
         public int InstallmentAmount { get; set; }
         public string Status { get; set; }
+        public bool IsAllowLoanArrears { get; set; }
+        public int LoanArrearsInterest { get; set; }
+        public int LoanArrearsAllowDays { get; set; }
         public string TenantId { get; set; }
         public virtual ICollection<Installment> Installments { get; set; }
     }

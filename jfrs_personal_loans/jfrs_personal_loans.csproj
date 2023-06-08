@@ -13,6 +13,8 @@
     <Compile Remove="Migrations\20230501154035_AddSomePropsToApplicationUser.Designer.cs" />
     <Compile Remove="Migrations\20230501171849_ThirdMigration.cs" />
     <Compile Remove="Migrations\20230501171849_ThirdMigration.Designer.cs" />
+    <Compile Remove="Migrations\20230608164940_AddLoanAndInstallmentModel.cs" />
+    <Compile Remove="Migrations\20230608164940_AddLoanAndInstallmentModel.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
