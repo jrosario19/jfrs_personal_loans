@@ -10,8 +10,7 @@ namespace jfrs_personal_loans.Models
 {
     public class Installment : BaseEntity, ITenantEntity
     {
-        [Column(TypeName = "date")]
-        public DateTime OpenDate { get; set; }
+        public string OpenDate { get; set; }
         public decimal InstallmentAmount { get; set; }
         public string Status { get; set; }
         public string TenantId { get; set; }
