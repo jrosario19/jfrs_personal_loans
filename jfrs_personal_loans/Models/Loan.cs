@@ -15,14 +15,14 @@ namespace jfrs_personal_loans.Models
         public DateTime DueDate { get; set; }
         public int Capital { get; set; }
         public decimal Rate { get; set; }
-        public int InterestAmount { get; set; }
-        public int TotalAmount { get; set; }
+        public decimal InterestAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string PaymentFrequency { get; set; }
         public int installmentQty { get; set; }
-        public int InstallmentAmount { get; set; }
+        public decimal InstallmentAmount { get; set; }
         public string Status { get; set; }
         public bool IsAllowLoanArrears { get; set; }
-        public int LoanArrearsInterest { get; set; }
+        public decimal LoanArrearsInterest { get; set; }
         public int LoanArrearsAllowDays { get; set; }
         public string TenantId { get; set; }
         public virtual ICollection<Installment> Installments { get; set; }
