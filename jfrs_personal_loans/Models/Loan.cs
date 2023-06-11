@@ -24,5 +24,6 @@ namespace jfrs_personal_loans.Models
         public int LoanArrearsAllowDays { get; set; }
         public string TenantId { get; set; }
         public virtual ICollection<Installment> Installments { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using jfrs_personal_loans.Data.Repositories.Clients;
 using jfrs_personal_loans.Data.Repositories.Installments;
 using jfrs_personal_loans.Data.Repositories.LanConfigurations;
 using jfrs_personal_loans.Data.Repositories.Loans;
+using jfrs_personal_loans.Data.Repositories.Payments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,9 @@ namespace jfrs_personal_loans.Data
 
         private InstallmentRepository _installmentRepository;
         public InstallmentRepository InstallmentRepository => _installmentRepository ?? (_installmentRepository = new InstallmentRepository(_context));
+
+        private PaymentRepository _paymentRepository;
+        public PaymentRepository PaymentRepository => _paymentRepository ?? (_paymentRepository = new PaymentRepository(_context));
 
         private bool _disposedValue = false;
 
