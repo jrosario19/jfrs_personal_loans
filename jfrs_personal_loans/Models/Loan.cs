@@ -1,6 +1,7 @@
 ﻿using jfrs_personal_loans.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +23,9 @@ namespace jfrs_personal_loans.Models
         public bool IsAllowLoanArrears { get; set; }
         public decimal LoanArrearsInterest { get; set; }
         public int LoanArrearsAllowDays { get; set; }
+        [Required]
+        public int ClientId { get; set; }
+        public virtual Client Client { get; set; }
         public string TenantId { get; set; }
         public virtual ICollection<Installment> Installments { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
