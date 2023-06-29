@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using jfrs_personal_loans.Data;
 
 namespace jfrs_personal_loans.Migrations
 {
     [DbContext(typeof(JFRSPersonalLoansDBContext))]
-    partial class JFRSPersonalLoansDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230616211616_AddArrearAmountToPaymentModel")]
+    partial class AddArrearAmountToPaymentModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

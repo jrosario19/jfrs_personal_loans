@@ -11,6 +11,7 @@ namespace jfrs_personal_loans.Models
     {
         public string Date { get; set; }
         public decimal Amount { get; set; }
+        public decimal ArrearAmount { get; set; }
         public string Status { get; set; }
         public string TenantId { get; set; }
         [Required]
