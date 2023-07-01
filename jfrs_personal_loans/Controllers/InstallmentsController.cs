@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using jfrs_personal_loans.Models;
 using jfrs_personal_loans.Services;
 using jfrs_personal_loans.Services.Installments;
+using jfrs_personal_loans.Services.Loans;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,11 +19,13 @@ namespace jfrs_personal_loans.Controllers
     public class InstallmentsController : ControllerBase
     {
         private readonly IInstallmentService _installmentService;
+        private readonly ILoanService _loanService;
         private readonly ITenantService _tenantService;
 
-        public InstallmentsController(IInstallmentService installmentService, ITenantService tenantService)
+        public InstallmentsController(IInstallmentService installmentService, ILoanService loanService,ITenantService tenantService)
         {
             this._installmentService = installmentService;
+            this._loanService = loanService;
             this._tenantService = tenantService;
         }
 
@@ -31,7 +34,19 @@ namespace jfrs_personal_loans.Controllers
         public IActionResult GetAll()
         {
             var installments = _installmentService.GetInstallments().ToList();
-            return Ok(new { installments = installments });
+            List<Installment> newInstallments = new List<Installment>();
+
+
+            foreach (var installment1 in installments)
+            {
+                var installment = _installmentService.GetInstallmentById(installment1.Id);
+                var loanList = _loanService.GetLoans().ToList();
+                var loanFEId = loanList.FirstOrDefault(l => l.Id == installment.LoanId).FEId;
+                installment.LoanId = int.Parse(loanFEId);
+                newInstallments.Add(installment);
+            }
+
+            return Ok(new { installments = newInstallments });
         }
 
         [HttpGet("{id}", Name = "CreatedInstallment")]
@@ -39,6 +54,12 @@ namespace jfrs_personal_loans.Controllers
         public IActionResult GetById(int id)
         {
             var installment = _installmentService.GetInstallmentById(id);
+            var loanList = _loanService.GetLoans().ToList();
+            var loanFEId = loanList.FirstOrDefault(l => l.Id == installment.LoanId).FEId;
+            installment.LoanId = int.Parse(loanFEId);
+
+
+
 
             if (installment == null)
             {
@@ -53,9 +74,12 @@ namespace jfrs_personal_loans.Controllers
         public IActionResult Create([FromBody] Installment installment)
         {
 
+            var loanList = _loanService.GetLoans().ToList();
+            var loanId = loanList.FirstOrDefault(l => l.FEId == installment.LoanId.ToString()).Id;
 
             installment.CreatedByUser = User.Identity.Name;
             installment.CreatedOnDate = DateTime.Now;
+            installment.LoanId = loanId;
 
             if (ModelState.IsValid)
             {
@@ -75,7 +99,9 @@ namespace jfrs_personal_loans.Controllers
         [Route("update")]
         public IActionResult Update([FromBody] Installment installment)
         {
-
+            var loanList = _loanService.GetLoans().ToList();
+            var loanId = loanList.FirstOrDefault(l => l.FEId == installment.LoanId.ToString()).Id;
+            installment.LoanId = loanId;
 
             installment.CreatedByUser = User.Identity.Name;
             installment.CreatedOnDate = DateTime.Now;

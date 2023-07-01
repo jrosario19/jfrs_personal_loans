@@ -14,8 +14,6 @@ namespace jfrs_personal_loans.Models
         public decimal InstallmentAmount { get; set; }
         public string Status { get; set; }
         public string TenantId { get; set; }
-        [Required]
         public int LoanId { get; set; }
-        public virtual Loan Loan { get; set; }
     }
 }

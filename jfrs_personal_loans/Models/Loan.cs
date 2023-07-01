@@ -23,11 +23,7 @@ namespace jfrs_personal_loans.Models
         public bool IsAllowLoanArrears { get; set; }
         public decimal LoanArrearsInterest { get; set; }
         public int LoanArrearsAllowDays { get; set; }
-        [Required]
         public int ClientId { get; set; }
-        public virtual Client Client { get; set; }
         public string TenantId { get; set; }
-        public virtual ICollection<Installment> Installments { get; set; }
-        public virtual ICollection<Payment> Payments { get; set; }
     }
 }
