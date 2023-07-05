@@ -75,16 +75,17 @@ namespace jfrs_personal_loans.Controllers
         {
 
             var loanList = _loanService.GetLoans().ToList();
-            var loanId = loanList.FirstOrDefault(l => l.FEId == installment.LoanId.ToString()).Id;
+            var loan = loanList.FirstOrDefault(l => l.FEId == installment.LoanId.ToString());
 
             installment.CreatedByUser = User.Identity.Name;
             installment.CreatedOnDate = DateTime.Now;
-            installment.LoanId = loanId;
+            installment.LoanId = loan.Id;
 
             if (ModelState.IsValid)
             {
 
                 _installmentService.InsertInstallment(installment);
+                installment.LoanId = int.Parse(loan.FEId);
                 return new CreatedAtRouteResult("CreatedInstallment", new { id = installment.Id }, new { installment = installment });
 
 
