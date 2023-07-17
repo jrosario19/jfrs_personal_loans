@@ -19,6 +19,8 @@ namespace jfrs_personal_loans.Models
         public string ReferalName { get; set; }
         public string ReferalPhonenumber { get; set; }
         public string ReferalAddress { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
         public string TenantId { get; set; }
     }
 }
