@@ -15,6 +15,8 @@
     <Compile Remove="Migrations\20230501171849_ThirdMigration.Designer.cs" />
     <Compile Remove="Migrations\20230608164940_AddLoanAndInstallmentModel.cs" />
     <Compile Remove="Migrations\20230608164940_AddLoanAndInstallmentModel.Designer.cs" />
+    <Compile Remove="Migrations\20231115205119_AddedInAppPurchasesFeature.cs" />
+    <Compile Remove="Migrations\20231115205119_AddedInAppPurchasesFeature.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis" Version="1.60.0" />
+    <PackageReference Include="Google.Apis.AndroidPublisher.v3" Version="1.60.0.3036" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.60.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />

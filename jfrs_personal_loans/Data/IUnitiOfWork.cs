@@ -1,5 +1,6 @@
 ﻿using jfrs_personal_loans.Data.CompanyConfigurations;
 using jfrs_personal_loans.Data.Repositories.Clients;
+using jfrs_personal_loans.Data.Repositories.InAppPurchases;
 using jfrs_personal_loans.Data.Repositories.Installments;
 using jfrs_personal_loans.Data.Repositories.LanConfigurations;
 using jfrs_personal_loans.Data.Repositories.Loans;
@@ -20,6 +21,7 @@ namespace jfrs_personal_loans.Data
         LoanRepository LoanRepository { get; }
         InstallmentRepository InstallmentRepository { get; }
         PaymentRepository PaymentRepository { get; }
+        InAppPurchaseRepository InAppPurchaseRepository { get; }
 
     }
 }

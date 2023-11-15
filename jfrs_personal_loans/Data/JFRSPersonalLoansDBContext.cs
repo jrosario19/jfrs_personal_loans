@@ -73,5 +73,6 @@ namespace jfrs_personal_loans.Data
         public DbSet<Loan> Loans { get; set; }
         public DbSet<Installment> Installments { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<InAppPurchase> InAppPurchases { get; set; }
     }
 }

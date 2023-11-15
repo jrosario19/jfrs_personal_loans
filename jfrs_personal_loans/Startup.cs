@@ -8,6 +8,7 @@ using jfrs_personal_loans.Models;
 using jfrs_personal_loans.Services;
 using jfrs_personal_loans.Services.Clients;
 using jfrs_personal_loans.Services.CompanyConfigurations;
+using jfrs_personal_loans.Services.InAppPurchases;
 using jfrs_personal_loans.Services.Installments;
 using jfrs_personal_loans.Services.LoanConfigurations;
 using jfrs_personal_loans.Services.Loans;
@@ -84,6 +85,8 @@ namespace jfrs_personal_loans
             services.AddHttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+
+
             services.Configure<SMTPConfig>(Configuration.GetSection("SMTPConfig"));
 
             services.AddMvc().AddJsonOptions(ConfigureJson);
@@ -99,7 +102,9 @@ namespace jfrs_personal_loans
             services.AddTransient<ILoanService, LoanService>();
             services.AddTransient<IInstallmentService, InstallmentService>();
             services.AddTransient<IPaymentService, PaymentService>();
+            services.AddTransient<IInAppPurchaseService, InAppPurchaseService>();
             services.AddTransient<IEmailService, EmailService>();
+
         }
 
         private void ConfigureJson(MvcJsonOptions obj)

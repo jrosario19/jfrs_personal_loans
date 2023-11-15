@@ -1,5 +1,6 @@
 ﻿using jfrs_personal_loans.Data.CompanyConfigurations;
 using jfrs_personal_loans.Data.Repositories.Clients;
+using jfrs_personal_loans.Data.Repositories.InAppPurchases;
 using jfrs_personal_loans.Data.Repositories.Installments;
 using jfrs_personal_loans.Data.Repositories.LanConfigurations;
 using jfrs_personal_loans.Data.Repositories.Loans;
@@ -56,6 +57,9 @@ namespace jfrs_personal_loans.Data
 
         private PaymentRepository _paymentRepository;
         public PaymentRepository PaymentRepository => _paymentRepository ?? (_paymentRepository = new PaymentRepository(_context));
+
+        private InAppPurchaseRepository _inAppPurchaseRepository;
+        public InAppPurchaseRepository InAppPurchaseRepository => _inAppPurchaseRepository ?? (_inAppPurchaseRepository = new InAppPurchaseRepository(_context));
 
         private bool _disposedValue = false;
 
