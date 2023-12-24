@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using jfrs_personal_loans.Data;
 
 namespace jfrs_personal_loans.Migrations
 {
     [DbContext(typeof(JFRSPersonalLoansDBContext))]
-    partial class JFRSPersonalLoansDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231217215135_initialmigration")]
+    partial class initialmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,8 +186,6 @@ namespace jfrs_personal_loans.Migrations
                     b.Property<string>("InAppPurchaseToken");
 
                     b.Property<bool>("IsActive");
-
-                    b.Property<string>("ProductId");
 
                     b.Property<string>("TenantId");
 

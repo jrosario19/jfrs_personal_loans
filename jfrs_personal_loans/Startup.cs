@@ -115,14 +115,15 @@ namespace jfrs_personal_loans
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ICompanyConfigurationService companyConfigurationService)
         {
-            if (env.IsDevelopment())
+            app.UseDeveloperExceptionPage();
+            /*if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
                 app.UseHsts();
-            }
+            }*/
 
             app.UseAuthentication();
 
@@ -136,6 +137,8 @@ namespace jfrs_personal_loans
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "JRS Personal Loans Api");
             });
+
+            
 
             //if (!companyConfigurationService.GetCompanyConfigurations().ToList().Any())
             //{

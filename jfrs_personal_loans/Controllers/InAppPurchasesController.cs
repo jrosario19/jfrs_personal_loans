@@ -86,6 +86,30 @@ namespace jfrs_personal_loans.Controllers
 
             if (ModelState.IsValid)
             {
+                InAppPurchase inAppPurchaseDB = null;
+                InAppPurchase inAppPurchaseExist = null;
+                if (inAppPurchase.InAppPurchaseToken == "")
+                {
+                    inAppPurchaseDB = _inAppPurchaseService.GetInAppPurchases().FirstOrDefault();
+                    if (inAppPurchaseDB != null)
+                    {
+                        inAppPurchase.InAppPurchaseToken = inAppPurchaseDB.InAppPurchaseToken;
+                        inAppPurchase.ProductId = inAppPurchaseDB.ProductId;
+                    }
+                }
+                else 
+                {
+                    inAppPurchaseExist = _inAppPurchaseService.GetInAppPurchases().FirstOrDefault(iap=>iap.InAppPurchaseToken==inAppPurchase.InAppPurchaseToken);
+                    if (inAppPurchaseExist != null)
+                    {
+                        inAppPurchase.InAppPurchaseToken = inAppPurchaseExist.InAppPurchaseToken;
+                        inAppPurchase.ProductId = inAppPurchaseExist.ProductId;
+                    }
+                }
+                
+                
+
+                
 
                 var scopes = new[] { AndroidPublisherService.Scope.Androidpublisher };
 
@@ -115,7 +139,7 @@ namespace jfrs_personal_loans.Controllers
                 var listsub = monetizationResource.Subscriptions.List("jrs.personalloans.jrs_personal_loans").Execute();
 
                 //var purchase = androidPublisher.Purchases.Subscriptions.Get("jrs.dashclicker", "dash_subscription_doubler", "fijdbilcdfjghmcibcmlfohg.AO-J1OwC_rdoNBGN-aJm873gNkIbLx0rQvEfaIeS47s0-GInEZjn5empw_4coPCyFFbl5BjKVXKYNJzlEyfqs80VjVHOxF4gYA").Execute();
-                var purchase = androidPublisher.Purchases.Subscriptions.Get("jrs.personalloans.jrs_personal_loans", "10_us_1_mes", "iahokldldhdkfngpmijglhfm.AO-J1Ox82olS39fOiYGWTkA0A40Q4k_s0aSn82-08kq-dH2AcUZy6m1Ozw-krD28GOzz3vkBgWYa8TaULFRP_vGifhn1cav-0AbY3WMqRJQ-29t285ilq5Q").Execute();
+                var purchase = androidPublisher.Purchases.Subscriptions.Get("jrs.personalloans.jrs_personal_loans", inAppPurchase.ProductId, inAppPurchase.InAppPurchaseToken).Execute();
                 int i = 1 + 1;
                 //AndroidPublisherService androidPublisher=new AndroidPublisherService();
                 double ticks = double.Parse(purchase.ExpiryTimeMillis.ToString());
@@ -126,10 +150,19 @@ namespace jfrs_personal_loans.Controllers
                 //Console.WriteLine(DateTime.Now.AddHours(4).Ticks - expiredate.Ticks);
                 if (expiredate.Ticks < DateTime.Now.AddHours(4).Ticks)
                 {
-                    return Ok(new { message = "Order is passed due", expirationdate = expiredate.AddHours(-4) });
+                    return Ok(new { message = "Order is passed due", expirationdate = expiredate.AddHours(-4), productId = inAppPurchase.ProductId });
                 }
-                else {
-                    return Ok(new { message = "Order is current", expirationdate = expiredate.AddHours(-4) });
+                else 
+                {
+                    if (inAppPurchaseExist == null) 
+                    {
+                        inAppPurchase.CreatedByUser = User.Identity.Name;
+                        inAppPurchase.CreatedOnDate = DateTime.Now;
+                        _inAppPurchaseService.InsertInAppPurchase(inAppPurchase);
+                    }
+                    
+                    return Ok(new { message = "Order is current", expirationdate = expiredate.AddHours(-4), productId = inAppPurchase.ProductId });
+                    
                 }
                 //Console.WriteLine(expiredate);
 
