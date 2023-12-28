@@ -90,7 +90,7 @@ namespace jfrs_personal_loans.Controllers
                 InAppPurchase inAppPurchaseExist = null;
                 if (inAppPurchase.InAppPurchaseToken == "")
                 {
-                    inAppPurchaseDB = _inAppPurchaseService.GetInAppPurchases().FirstOrDefault();
+                    inAppPurchaseDB = _inAppPurchaseService.GetInAppPurchases().LastOrDefault();
                     if (inAppPurchaseDB != null)
                     {
                         inAppPurchase.InAppPurchaseToken = inAppPurchaseDB.InAppPurchaseToken;
@@ -99,7 +99,7 @@ namespace jfrs_personal_loans.Controllers
                 }
                 else 
                 {
-                    inAppPurchaseExist = _inAppPurchaseService.GetInAppPurchases().FirstOrDefault(iap=>iap.InAppPurchaseToken==inAppPurchase.InAppPurchaseToken);
+                    inAppPurchaseExist = _inAppPurchaseService.GetInAppPurchases().LastOrDefault(iap=>iap.InAppPurchaseToken==inAppPurchase.InAppPurchaseToken);
                     if (inAppPurchaseExist != null)
                     {
                         inAppPurchase.InAppPurchaseToken = inAppPurchaseExist.InAppPurchaseToken;

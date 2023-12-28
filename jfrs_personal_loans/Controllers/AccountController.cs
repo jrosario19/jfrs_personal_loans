@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -143,7 +145,46 @@ namespace jfrs_personal_loans.Controllers
             }
         }
 
-        private async Task<IActionResult> BuildToken(UserInfo userInfo)
+        //[Route("sendemail")]
+        //[HttpPost]
+        //public async Task<IActionResult> sendemail()
+        //{
+
+        //    MailMessage mail = new MailMessage
+        //    {
+        //        Subject = "Maricon",
+        //        Body = "Esto es una broma",
+        //        From = new MailAddress("info@jrspersonalloans.com", "Maria"),
+        //        IsBodyHtml = false,
+        //    };
+        //    mail.To.Add("jrosario19@hotmail.com");
+
+        //    NetworkCredential networkCredential = new NetworkCredential(_configuration["Email_user_name"], _configuration["Email_password"]);
+        //    SmtpClient smtpClient = new SmtpClient()
+        //    {
+        //        Host = "mail5019.site4now.net",
+        //        Port = 25,
+        //        EnableSsl = false,
+        //        UseDefaultCredentials = false,
+        //        Credentials = networkCredential
+        //    };
+
+        //    try
+        //    {
+        //        await smtpClient.SendMailAsync(mail);
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return BadRequest(ex);
+        //    }
+
+            
+
+        //    return Ok("Mariconazo");
+        //}
+
+            private async Task<IActionResult> BuildToken(UserInfo userInfo)
         {
             var claims = new[]
             {
@@ -152,7 +193,7 @@ namespace jfrs_personal_loans.Controllers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Super_secret_key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("jdskljfkljasdklfjklasjdfkljklfdsjklfjsd"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var expiration = DateTime.UtcNow.AddHours(5);

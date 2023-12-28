@@ -74,7 +74,7 @@ namespace jfrs_personal_loans
                 ValidIssuer = "jfrspersonalloans.com",
                 ValidAudience = "jfrspersonalloans.com",
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(Configuration["Super_secret_key"])),
+                    Encoding.UTF8.GetBytes("jdskljfkljasdklfjklasjdfkljklfdsjklfjsd")),
                 ClockSkew = TimeSpan.Zero
             });
 

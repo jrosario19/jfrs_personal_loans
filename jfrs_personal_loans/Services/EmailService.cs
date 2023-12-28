@@ -75,7 +75,7 @@ namespace jfrs_personal_loans.Services
                 mail.To.Add(toEmail);
             }
 
-            NetworkCredential networkCredential = new NetworkCredential(_configuration["Email_user_name"], _configuration["Email_password"]);
+            NetworkCredential networkCredential = new NetworkCredential("jfrsprestamospersonales@hotmail.com", "00-12851");
             SmtpClient smtpClient = new SmtpClient
             {
                 Host = _smtpConfig.Host,
@@ -86,6 +86,8 @@ namespace jfrs_personal_loans.Services
             };
 
             mail.BodyEncoding = Encoding.Default;
+
+
 
             await smtpClient.SendMailAsync(mail);
         }
