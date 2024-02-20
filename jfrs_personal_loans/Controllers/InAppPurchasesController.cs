@@ -39,8 +39,8 @@ namespace jfrs_personal_loans.Controllers
             return Ok(new { inAppPurchases = inAppPurchases });
         }
 
-        [HttpGet("{id}", Name = "CreatedInAppPurchase")]
-        [Route("getbyid")]
+        [HttpGet]
+        [Route("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
             var inAppPurchase = _inAppPurchaseService.GetInAppPurchaseById(id);
@@ -66,7 +66,7 @@ namespace jfrs_personal_loans.Controllers
             {
 
                 _inAppPurchaseService.InsertInAppPurchase(inAppPurchase);
-                return new CreatedAtRouteResult("CreatedInAppPurchase", new { id = inAppPurchase.Id }, new { inAppPurchase = inAppPurchase });
+                return Ok(new { inAppPurchase = inAppPurchase });
 
 
 
@@ -148,9 +148,9 @@ namespace jfrs_personal_loans.Controllers
                 //Console.WriteLine(expiredate.Ticks);
                 //Console.WriteLine(DateTime.Now.AddHours(4).Ticks);
                 //Console.WriteLine(DateTime.Now.AddHours(4).Ticks - expiredate.Ticks);
-                if (expiredate.Ticks < DateTime.Now.AddHours(4).Ticks)
+                if (expiredate.Ticks < DateTime.Now.AddHours(0).Ticks)
                 {
-                    return Ok(new { message = "Order is passed due", expirationdate = expiredate.AddHours(-4), productId = inAppPurchase.ProductId });
+                    return Ok(new { message = "Order is passed due", expirationdate = expiredate.AddHours(0), productId = inAppPurchase.ProductId });
                 }
                 else 
                 {
@@ -187,7 +187,7 @@ namespace jfrs_personal_loans.Controllers
             return Ok(new { inAppPurchase = inAppPurchaseUpdated });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [Route("delete")]
         public IActionResult Delete(int id)
         {

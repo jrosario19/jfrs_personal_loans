@@ -1,4 +1,5 @@
-﻿using jfrs_personal_loans.Models;
+﻿using Azure.Communication.Email;
+using jfrs_personal_loans.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace jfrs_personal_loans.Services
@@ -62,34 +64,42 @@ namespace jfrs_personal_loans.Services
 
         private async Task SendEmailAsync(UserEmailOptions userEmailOptions)
         {
-            MailMessage mail = new MailMessage
-            {
-                Subject = userEmailOptions.Subject,
-                Body = userEmailOptions.Body,
-                From = new MailAddress(_smtpConfig.SenderAddress, _smtpConfig.SenderDisplayName),
-                IsBodyHtml = _smtpConfig.IsBodyHTML,
-            };
+            //MailMessage mail = new MailMessage
+            //{
+            //    Subject = userEmailOptions.Subject,
+            //    Body = userEmailOptions.Body,
+            //    From = new MailAddress(_smtpConfig.SenderAddress, _smtpConfig.SenderDisplayName),
+            //    IsBodyHtml = _smtpConfig.IsBodyHTML,
+            //};
 
-            foreach (var toEmail in userEmailOptions.ToEmails)
-            {
-                mail.To.Add(toEmail);
-            }
+            //foreach (var toEmail in userEmailOptions.ToEmails)
+            //{
+            //    mail.To.Add(toEmail);
+            //}
 
-            NetworkCredential networkCredential = new NetworkCredential("jfrsprestamospersonales@hotmail.com", "00-12851");
-            SmtpClient smtpClient = new SmtpClient
-            {
-                Host = _smtpConfig.Host,
-                Port = _smtpConfig.Port,
-                EnableSsl = _smtpConfig.EnableSSL,
-                UseDefaultCredentials = _smtpConfig.UseDefaultCredentials,
-                Credentials = networkCredential
-            };
+            //NetworkCredential networkCredential = new NetworkCredential(_configuration["Email_user_name"], _configuration["Email_password"]);
+            //SmtpClient smtpClient = new SmtpClient
+            //{
+            //    Host = _smtpConfig.Host,
+            //    Port = _smtpConfig.Port,
+            //    EnableSsl = _smtpConfig.EnableSSL,
+            //    UseDefaultCredentials = _smtpConfig.UseDefaultCredentials,
+            //    Credentials = networkCredential
+            //};
 
-            mail.BodyEncoding = Encoding.Default;
+            //mail.BodyEncoding = Encoding.Default;
 
 
 
-            await smtpClient.SendMailAsync(mail);
+            //await smtpClient.SendMailAsync(mail);
+
+            EmailClient emailClient = new EmailClient(_configuration.GetConnectionString("AzureEmailServiceConnection"));
+            EmailContent emailContent = new EmailContent(userEmailOptions.Subject);
+            emailContent.Html = userEmailOptions.Body;
+            List<EmailAddress> mailAddress = new List<EmailAddress> { new EmailAddress(userEmailOptions.ToEmails[0]) };
+            EmailRecipients recipients = new EmailRecipients(mailAddress);
+            EmailMessage mailMessage = new EmailMessage(_configuration["Email_user_name"], recipients, emailContent);
+            emailClient.Send(Azure.WaitUntil.Completed,mailMessage, CancellationToken.None);
         }
 
         private string GetEmailBody(string templateName)

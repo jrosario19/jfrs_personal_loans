@@ -35,8 +35,8 @@ namespace jfrs_personal_loans.Controllers
             this._emailService = emailService;
         }
 
-        [Route("Create")]
         [HttpPost]
+        [Route("Create")]
         public async Task<IActionResult> CreateUser([FromBody] UserInfo model)
         {
             var userExist = await _userManager.FindByEmailAsync(model.Email);
@@ -113,9 +113,9 @@ namespace jfrs_personal_loans.Controllers
 
         }
 
-        
-        [Route("Login")]
+
         [HttpPost]
+        [Route("Login")]
         public async Task<IActionResult> Login([FromBody] UserInfo userInfo)
         {
             if (ModelState.IsValid)
@@ -184,7 +184,7 @@ namespace jfrs_personal_loans.Controllers
         //    return Ok("Mariconazo");
         //}
 
-            private async Task<IActionResult> BuildToken(UserInfo userInfo)
+        private async Task<IActionResult> BuildToken(UserInfo userInfo)
         {
             var claims = new[]
             {
@@ -193,7 +193,7 @@ namespace jfrs_personal_loans.Controllers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("jdskljfkljasdklfjklasjdfkljklfdsjklfjsd"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Super_secret_key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var expiration = DateTime.UtcNow.AddHours(5);
@@ -215,9 +215,9 @@ namespace jfrs_personal_loans.Controllers
             });
 
         }
-
-        [Route("Changepassword")]
+        
         [HttpPost]
+        [Route("Changepassword")]
         public async Task<IActionResult> ChangePwd([FromBody] ChangePassword model)
         {
             if (ModelState.IsValid)
@@ -271,8 +271,8 @@ namespace jfrs_personal_loans.Controllers
             await _emailService.SendEmailForEmailConfirmation(userEmailOptions);
         }
 
-        [Route("confirmemail")]
         [HttpGet]
+        [Route("confirmemail")]
         public async Task<IActionResult> ConfirmEmail(string uid, string token)
         {
             var user = await _userManager.FindByIdAsync(uid);
@@ -304,8 +304,8 @@ namespace jfrs_personal_loans.Controllers
             return Ok("Solicitud completada con éxito, por favor consulte su dirección de correo electrónico para más detalles.");
         }
 
-        [Route("resetpasswordemail")]
         [HttpPost]
+        [Route("resetpasswordemail")]
         public async Task<IActionResult> ResetPasswordEmail([FromBody] UserInforResetPasswordEmail model)
         {
             if (ModelState.IsValid)
@@ -358,8 +358,9 @@ namespace jfrs_personal_loans.Controllers
             ModelState.AddModelError("message", "Invalid input attempt.");
             return BadRequest(ModelState);
         }
-        [Route("validateresetpasswordtoken")]
+
         [HttpPost]
+        [Route("validateresetpasswordtoken")]
         public async Task<IActionResult> ResetPassword([FromBody] UserInfoResetPassword model)
         {
             if (ModelState.IsValid)
@@ -389,8 +390,8 @@ namespace jfrs_personal_loans.Controllers
             return BadRequest(ModelState);
         }
 
-        [Route("changepasswordreset")]
         [HttpPost]
+        [Route("changepasswordreset")]
         public async Task<IActionResult> ResetPasswordChange([FromBody] ResetPasswordChange model) 
         {
             if (ModelState.IsValid)

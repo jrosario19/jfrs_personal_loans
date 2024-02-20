@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/jfrspersonalloans/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsDBConnection_B05221AF83",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/jfrs-personal-loansdbserver/databases/jfrs_personal_loans_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DBConnection"
+    },
+    "mssql2": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:JFRSPersoalLoansConnection"
+    }
+  }
+}

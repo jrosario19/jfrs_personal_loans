@@ -49,8 +49,8 @@ namespace jfrs_personal_loans.Controllers
             return Ok(new { installments = newInstallments });
         }
 
-        [HttpGet("{id}", Name = "CreatedInstallment")]
-        [Route("getbyid")]
+        [HttpGet]
+        [Route("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
             var installment = _installmentService.GetInstallmentById(id);
@@ -86,7 +86,7 @@ namespace jfrs_personal_loans.Controllers
 
                 _installmentService.InsertInstallment(installment);
                 installment.LoanId = int.Parse(loan.FEId);
-                return new CreatedAtRouteResult("CreatedInstallment", new { id = installment.Id }, new { installment = installment });
+                return Ok(new { installment = installment });
 
 
 
@@ -110,7 +110,7 @@ namespace jfrs_personal_loans.Controllers
             return Ok(new { installment = installmentUpdated });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [Route("delete")]
         public IActionResult Delete(int id)
         {

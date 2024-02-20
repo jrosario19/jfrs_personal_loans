@@ -34,8 +34,8 @@ namespace jfrs_personal_loans.Controllers
             return Ok(new { companyConfigurations = companyConfigurations });
         }
 
-        [HttpGet("{id}", Name ="CreatedCompanyConfiguration")]
-        [Route("getbyid")]
+        [HttpGet]
+        [Route("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
             var companyConfiguration = _companyConfigurationService.GetCompanyConfigurationById(id);
@@ -73,13 +73,13 @@ namespace jfrs_personal_loans.Controllers
                     companyConfigurationExist.Address = companyConfiguration.Address;
                     companyConfigurationExist.PhoneNumber = companyConfiguration.PhoneNumber;
                     companyConfigurationExist.Currency = companyConfiguration.Currency;
-                    _companyConfigurationService.InsertCompanyConfiguration(companyConfigurationExist);
-                    return new CreatedAtRouteResult("CreatedCompanyConfiguration", new { id = companyConfiguration.Id }, new { companyConfiguration = companyConfigurationExist });
+                    _companyConfigurationService.UpdateCompanyConfiguration(companyConfigurationExist);
+                    return Ok(new { companyConfiguration = companyConfigurationExist });
                 }
                 else
                 {
                     _companyConfigurationService.InsertCompanyConfiguration(companyConfiguration);
-                    return new CreatedAtRouteResult("CreatedCompanyConfiguration", new { id = companyConfiguration.Id }, new { companyConfiguration = companyConfiguration });
+                    return Ok(new { companyConfiguration = companyConfiguration });
                 }
                 
             }
@@ -108,7 +108,7 @@ namespace jfrs_personal_loans.Controllers
             return Ok(new { companyConfiguration = companyConfigurationUpdated });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [Route("delete")]
         public IActionResult Delete(int id)
         {

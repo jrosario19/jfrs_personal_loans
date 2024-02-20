@@ -14,11 +14,12 @@ namespace jfrs_personal_loans.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "value1", "value2", "value3" };
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("getbyid/{id}")]
         public ActionResult<string> Get(int id)
         {
             return "value";
@@ -31,13 +32,13 @@ namespace jfrs_personal_loans.Controllers
         }
 
         // PUT api/values/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public void Delete(int id)
         {
         }

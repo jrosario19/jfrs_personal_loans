@@ -34,8 +34,8 @@ namespace jfrs_personal_loans.Controllers
             return Ok(new { clients = clients });
         }
 
-        [HttpGet("{id}", Name = "CreatedClient")]
-        [Route("getbyid")]
+        [HttpGet]
+        [Route("getbyid/{id}")]
         public IActionResult GetById(int id)
         {
             var client = _clientService.GetClientById(id);
@@ -61,10 +61,10 @@ namespace jfrs_personal_loans.Controllers
             {
                 
                     _clientService.InsertClient(client);
-                    return new CreatedAtRouteResult("CreatedClient", new { id = client.Id }, new { client = client });
-                
+                return Ok(new { client = client });
 
-                
+
+
             }
 
             ModelState.AddModelError("message", "Invalid input attempt.");
@@ -83,7 +83,7 @@ namespace jfrs_personal_loans.Controllers
             return Ok(new { client = clientUpdated });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [Route("delete")]
         public IActionResult Delete(int id)
         {
