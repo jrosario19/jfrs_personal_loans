@@ -33,7 +33,7 @@ namespace jfrs_personal_loans.Controllers
         [Route("getall")]
         public IActionResult GetAll()
         {
-            var installments = _installmentService.GetInstallments().ToList();
+            var installments = _installmentService.GetInstallments().Where(i=>i.IsActive==true).ToList();
             List<Installment> newInstallments = new List<Installment>();
 
 
@@ -84,9 +84,17 @@ namespace jfrs_personal_loans.Controllers
             if (ModelState.IsValid)
             {
 
-                _installmentService.InsertInstallment(installment);
-                installment.LoanId = int.Parse(loan.FEId);
-                return Ok(new { installment = installment });
+                var installmentExist = _installmentService.GetInstallments().FirstOrDefault(i => i.FEId == installment.FEId);
+
+                if (installmentExist==null)
+                {
+                    _installmentService.InsertInstallment(installment);
+                    installment.LoanId = int.Parse(loan.FEId);
+                    return Ok(new { installment = installment });
+                }
+
+                installmentExist.LoanId = int.Parse(loan.FEId);
+                return Ok(new { installment = installmentExist });
 
 
 

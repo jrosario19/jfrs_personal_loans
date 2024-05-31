@@ -38,8 +38,8 @@ namespace jfrs_personal_loans.Services.Installments
         }
         public Installment DeleteInstallment(Installment Installment)
         {
-            Installment.IsActive = false;
-            Installment installment = _unitOfWork.InstallmentRepository.Update(Installment);
+            //Installment.IsActive = false;
+            Installment installment = _unitOfWork.InstallmentRepository.Delete(Installment);
             _unitOfWork.SaveChanges();
             return installment;
             //return _InstallmentRepository.Delete(Installment);

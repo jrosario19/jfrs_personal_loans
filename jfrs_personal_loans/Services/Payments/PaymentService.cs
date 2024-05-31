@@ -39,8 +39,8 @@ namespace jfrs_personal_payments.Services.Payments
         }
         public Payment DeletePayment(Payment Payment)
         {
-            Payment.IsActive = false;
-            Payment payment = _unitOfWork.PaymentRepository.Update(Payment);
+            //Payment.IsActive = false;
+            Payment payment = _unitOfWork.PaymentRepository.Delete(Payment);
             _unitOfWork.SaveChanges();
             return payment;
             //return _PaymentRepository.Delete(Payment);

@@ -33,7 +33,7 @@ namespace jfrs_personal_loans.Controllers
         [Route("getall")]
         public IActionResult GetAll()
         {
-            var payments = _paymentService.GetPayments().ToList();
+            var payments = _paymentService.GetPayments().Where(p=>p.IsActive==true).ToList();
             List<Payment> newPayments = new List<Payment>();
 
 
@@ -84,9 +84,18 @@ namespace jfrs_personal_loans.Controllers
             if (ModelState.IsValid)
             {
 
-                _paymentService.InsertPayment(payment);
-                payment.LoanId = int.Parse(loan.FEId);
-                return Ok(new { payment = payment });
+                var paymentExist = _paymentService.GetPayments().FirstOrDefault(p => p.FEId == payment.FEId);
+
+                if (paymentExist == null)
+                {
+                    _paymentService.InsertPayment(payment);
+                    payment.LoanId = int.Parse(loan.FEId);
+                    return Ok(new { payment = payment });
+                }
+
+                paymentExist.LoanId = int.Parse(loan.FEId);
+                return Ok(new { payment = paymentExist });
+
 
 
 

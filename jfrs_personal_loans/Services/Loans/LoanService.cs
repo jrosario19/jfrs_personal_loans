@@ -38,8 +38,8 @@ namespace jfrs_personal_loans.Services.Loans
         }
         public Loan DeleteLoan(Loan Loan)
         {
-            Loan.IsActive = false;
-            Loan loan = _unitOfWork.LoanRepository.Update(Loan);
+            //Loan.IsActive = false;
+            Loan loan = _unitOfWork.LoanRepository.Delete(Loan);
             _unitOfWork.SaveChanges();
             return loan;
             //return _LoanRepository.Delete(Loan);

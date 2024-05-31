@@ -38,8 +38,8 @@ namespace jfrs_personal_loans.Services.Clients
         }
         public Client DeleteClient(Client Client)
         {
-            Client.IsActive = false;
-            Client client = _unitOfWork.ClientRepository.Update(Client);
+            //Client.IsActive = false;
+            Client client = _unitOfWork.ClientRepository.Delete(Client);
             _unitOfWork.SaveChanges();
             return client;
             //return _ClientRepository.Delete(Client);
